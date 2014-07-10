@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>OpenGl 贝兹曲线程序</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>OpenGl 贝兹曲线程序 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>贝兹曲线（Bézier curve），貌似学图形学就肯定逃不出这个玩意。。。介绍什么的我也就不浪费笔墨了。直接看wiki好了
+<a href="http://zh.wikipedia.org/zh/%E8%B2%9D%E8%8C%B2%E6%9B%B2%E7%B7%9A">http://zh.wikipedia.org/zh/%E8%B2%9D%E8%8C%B2%E6%9B%B2%E7%B7%9A</a>
+然后呢，我们图形学课老师上机貌似要做这个，所以就提前写出来了。贴一下，加了详细的注释，也方便自己复习用~
+对了，如果你是windows记得改一下头文件位置，这是unix下的头文件。。。
+<pre lang="cpp">
+/*
+ *  homework1.cpp
+ *  OpenGLhello
+ *
+ *  Created by zerob13 on <sup>10</sup>&frasl;<sub>13</sub>/10.
+ *  Copyright 2010 <strong>MyCompanyName</strong>. All rights reserved.
+ *
+ */
+#include<stdio.h>
+#include <stdlib.h>
+#include<GLUT/GLUT.h>
+double x[4],y[4];//存放输入的四个控制点</p>
+
+<p>/*
+ <em>用以绘制曲线的函数
+ *
+ */
+void Bezier(double X0,double Y0,
+            double X1,double Y1,
+            double X2,double Y2,
+            double X3,double Y3)
+{
+    double xx,yy,X,Y;
+    xx=X0;yy=Y0;
+    glColor3f(1.0, 0, 0.0);//设定曲线颜色
+    /*for循环绘制曲线</em>/
+    for (double t=0.0; t&lt;= 1.0;t=t+0.0001)//步长设置为0.0001，足够了
+    {
+        X=xx;Y=yy;
+        xx=(1-t)<em>(1-t)</em>(1-t)<em>X0+3*t</em>(1-t)<em>(1-t)*X1+3*t*t</em>(1-t)<em>X2+t*t*t*X3;
+        yy=(1-t)</em>(1-t)<em>(1-t)*Y0+3*t</em>(1-t)<em>(1-t)*Y1+3*t*t</em>(1-t)*Y2+t*t*t*Y3;//最主要的两个方程，用以计算曲线的点
+        glPointSize(1.0);
+        glBegin(GL_LINES);//描短直线成曲线
+        glVertex2f(X, Y);
+        glVertex2f(xx, yy);
+        glEnd();
+        glFlush();</p>
+
+<pre><code>}
+</code></pre>
+
+<p>}
+/*
+ *用以显示曲线以及辅助线的函数
+ *
+ */
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT);//清屏
+    glColor3f(0.0, 1, 0.0);//设定辅助线颜色
+    glPointSize(1.0);//设定点大小
+    glBegin(GL_LINES);//画辅助线
+    glVertex2f(x[0],y[0]);
+    glVertex2f(x[1], y[1]);
+    glVertex2f(x[1],y[1]);
+    glVertex2f(x[2], y[2]);
+    glVertex2f(x[2],y[2]);
+    glVertex2f(x[3], y[3]);
+    glEnd();
+    glFlush();</p>
+
+<pre><code>Bezier(x[0],y[0],x[1],y[1],x[2],y[2],x[3],y[3]);
+</code></pre>
+
+<p>}
+/*
+ *主函数
+ *
+ */
+int main(int argc,char ** argv)
+{
+    glutInit(&amp;argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
+    glutInitWindowPosition(0, 0);
+    glutInitWindowSize(500, 500);
+    glutCreateWindow(&ldquo;Zerob13&rsquo;s Bezier Demo&rdquo;);
+    printf(&ldquo;Please input 4 Points:\n&rdquo;);
+    scanf(&ldquo;%lf %lf %lf %lf %lf %lf %lf %lf&rdquo;,x,y,x+1,y+1,x+2,y+2,x+3,y+3);
+    glutDisplayFunc(display);
+    glutMainLoop();
+    return 0;
+}
+</pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/bale-is-tucao" title="只是吐槽罢了">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/recent-want" title="最近想做的">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-10-14</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#B%C3%A9zier-curve-ref">Bézier curve <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#opengl-ref">opengl <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E8%B4%9D%E5%85%B9%E6%9B%B2%E7%BA%BF-ref">贝兹曲线 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

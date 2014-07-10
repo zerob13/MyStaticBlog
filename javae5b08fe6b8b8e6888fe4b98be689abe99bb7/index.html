@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Java小游戏之扫雷</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>Java小游戏之扫雷 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>前几天看到室长在做c＃的作业，貌似是写一个扫雷。。。于是当时就想用java也写写看。。。
+  发现java的可视化真不是一般的难过。。。
+不过，磕磕碰碰的还是写出来了，虽然样子比较挫，但是还是可以玩的
+9*9 9个雷～
+下面上代码～
+<pre lang="java"></p>
+
+<p>/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */</p>
+
+<p>/**
+ *
+ * @author Zerob13
+ <em>/
+import java.awt.</em>;
+import java.awt.event.<em>;
+import javax.swing.</em>;
+class Mineb extends JButton {
+    private boolean ismine;
+    int x, y;
+    int num;
+    public boolean isMine() {
+        return ismine;
+    }
+    public void setMine(boolean a) {
+        ismine = a;
+    }
+    Mineb(String a, int i, int j) {
+        super.setText(a);
+        x = i;
+        y = j;
+        ismine = false;
+    }
+}
+public class Deom extends JFrame implements MouseListener {
+    /**
+     * @param args
+     */
+    Mineb[][] b;
+    JLabel state;
+    int last;
+    JMenuBar mb;
+    int elas;
+    class node {
+        int x, y;
+    }
+    int[][] dir = { { 0, 1 }, { 1, 0 }, { 1, 1 }, { -1, 1 }, { -1, -1 },
+            { 1, -1 }, { -1, 0 }, { 0, -1 } };
+    private void gen() {
+        int co = 0;
+        elas = 81 - 9;
+        last = 9;
+        int[] hash = new int[81];
+        for (int i = 0; i &lt; 9; i++) {
+            for (int j = 0; j &lt; 9; j++) {
+                b[i][j].setText(&ldquo;&rdquo;);
+                b[i][j].setEnabled(true);
+                b[i][j].setMine(false);
+            }
+        }
+        for (int i = 0; i &lt; 81; i++) {
+            hash[i] = 0;
+        }
+        for (; co &lt; 9;) {
+            int X = (int) (Math.random() * 81);
+            if (hash[X] == 0) {
+                hash[X] = 1;
+                co++;
+            }
+        }
+        for (int i = 0; i &lt; 81; i++) {
+            if (hash[i] == 1) {
+                int x = i / 10, y = i % 10;
+                if (x &gt;= 9)
+                    x = 8;
+                if (y &gt;= 9)
+                    y = 8;
+                b[x][y].setMine(true);
+            }
+        }
+        for (int i = 0; i &lt; 9; i++) {
+            for (int j = 0; j &lt; 9; j++) {
+                b[i][j].num = count(i, j);
+            }
+        }
+        state.setText(&ldquo;9&rdquo;);
+    }
+    Deom() {
+        mb = new JMenuBar();
+        setJMenuBar(mb);
+        state = new JLabel(&ldquo;&rdquo;);
+        JMenu start = new JMenu(&ldquo;Start&rdquo;);
+        JMenu http = new JMenu(&ldquo;http://zerob13.com&rdquo;);
+        mb.add(start);
+        mb.add(http);
+        JMenuItem s = new JMenuItem(&ldquo;Start!!&rdquo;);
+        start.add(s);
+        ActionListener st = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gen();
+            }
+        };
+        s.addActionListener(st);
+        setLayout(new GridLayout(10, 9, 0, 0));
+        b = new Mineb[9][9];
+        for (int i = 0; i &lt; 9; i++) {
+            for (int j = 0; j &lt; 9; j++) {
+                b[i][j] = new Mineb(&ldquo;&rdquo;, i, j);
+                b[i][j].setSize(10, 10);
+                b[i][j].addMouseListener(this);
+                add(b[i][j]);
+            }
+        }
+        add(state);
+        state.setText(String.valueOf(this.last));
+        setSize(500, 500);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gen();
+    }
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        Deom frame = new Deom();
+    }
+    int count(int x, int y) {
+        int i;
+        int k = 0;
+        for (i = 0; i &lt; 8; i++) {
+            int w = x + dir[i][0];
+            int z = y + dir[i][1];
+            if (w &lt; 0 || z &lt; 0 || w &gt;= 9 || z &gt;= 9)
+                continue;
+            if (b[w][z].isMine()) {
+                k++;
+            }
+        }
+        return k;
+    }
+    void showall() {
+        int i, j;</p>
+
+<pre><code>    for (i = 0; i &lt; 9; i++) {
+        for (j = 0; j &lt; 9; j++) {
+            if (b[i][j].isEnabled()) {
+                if (b[i][j].isMine()) {
+                    if (b[i][j].getText() == &quot;P&quot;)
+                        b[i][j].setText(&quot;R&quot;);
+                    else
+                        b[i][j].setText(&quot;@&quot;);
+                    b[i][j].setEnabled(false);
+                } else {
+                    if (b[i][j].num == 0) {
+                        if (b[i][j].getText() == &quot;P&quot;) {
+                            b[i][j].setText(&quot;X&quot;);
+                        } else
+                            b[i][j].setText(&quot;-&quot;);
+                    } else{
+                        if (b[i][j].getText() == &quot;P&quot;) {
+                            b[i][j].setText(&quot;X&quot;);
+                        }else
+                        b[i][j].setText(String.valueOf(b[i][j].num));}
+                    b[i][j].setEnabled(false);
+                }
+            }
+        }
+    }
+}
+void showsame(int x, int y) {
+    int i, j, k;
+    node[] queue = new node[81];
+    boolean[][] hash = new boolean[9][9];
+    for (i = 0; i &lt; 9; i++) {
+        for (j = 0; j &lt; 9; j++) {
+            hash[i][j] = false;
+        }
+    }
+    node head = new node();
+    node p = new node();
+    head.x = x;
+    head.y = y;
+    int top = 0;
+    int tail = 0;
+    queue[tail] = new node();
+    queue[tail].x = head.x;
+    queue[tail].y = head.y;
+    tail++;
+    while (tail &gt; top) {
+        head = queue[top];
+        top++;
+        for (i = 0; i &lt; 8; i++) {
+            int w = head.x + dir[i][0];
+            int z = head.y + dir[i][1];
+            if (w &lt; 0 || z &lt; 0 || w &gt;= 9 || z &gt;= 9)
+                continue;
+            if(b[w][z].getText()!=&quot;&quot;)
+                continue;
+            if (b[w][z].isMine())
+                continue;
+            if (hash[w][z])
+                continue;
+            hash[w][z] = true;
+            if (b[w][z].num == 0) {
+                queue[tail] = new node();
+                queue[tail].x = w;
+                queue[tail].y = z;
+                tail++;
+                if (b[w][z].isEnabled()) {
+                    b[w][z].setEnabled(false);
+                    elas--;
+                }
+                b[w][z].setText(&quot;-&quot;);
+            }
+        }
+    }
+    if (elas == 0) {
+        showall();
+                    JOptionPane.showMessageDialog(null, &quot;YOU WIN!&quot;, &quot;YOU WIN!&quot;, JOptionPane.DEFAULT_OPTION);
+        state.setText(&quot;WIN&quot;);
+    }
+}
+@Override
+public void mouseClicked(MouseEvent e) {
+    Mineb temp = (Mineb) e.getSource();
+    if (e.getButton() == MouseEvent.BUTTON1) {
+        if (temp.getText() == &quot;P&quot; || temp.getText() == &quot;?&quot;) {
+        } else {
+            if (temp.isMine()) {
+                showall();
+                                    state.setText(&quot;LOSE&quot;);
+                                     JOptionPane.showMessageDialog(null, &quot;YOU LOSE!&quot;, &quot;YOU LOSE!&quot;, JOptionPane.DEFAULT_OPTION);
+            } else {
+                if (temp.num == 0) {
+                    showsame(temp.x, temp.y);
+                    temp.setText(&quot;-&quot;);
+                } else {
+                    temp.setText(String.valueOf(temp.num));
+                }
+            }
+            if (temp.isEnabled()) {
+                temp.setEnabled(false);
+                elas--;
+            }
+            if (elas == 0) {
+                showall();
+                state.setText(&quot;WIN&quot;);
+                                     JOptionPane.showMessageDialog(null, &quot;YOU WIN!&quot;, &quot;YOU WIN!&quot;, JOptionPane.DEFAULT_OPTION);
+            }
+        }
+    } else if (e.getButton() == MouseEvent.BUTTON3) {
+        if (temp.getText() == &quot;P&quot; || this.last == 0) {
+            if (temp.getText() == &quot;P&quot;)
+                this.last++;
+            temp.setText(&quot;?&quot;);
+        } else if (temp.getText() == &quot;?&quot;) {
+            temp.setText(&quot;&quot;);
+        } else {
+            temp.setText(&quot;P&quot;);
+            this.last--;
+        }
+        state.setText(String.valueOf(this.last));
+    }
+}
+@Override
+public void mouseEntered(MouseEvent e) {
+    // TODO Auto-generated method stub
+}
+@Override
+public void mouseExited(MouseEvent e) {
+    // TODO Auto-generated method stub
+}
+@Override
+public void mousePressed(MouseEvent e) {
+    // TODO Auto-generated method stub
+}
+@Override
+public void mouseReleased(MouseEvent e) {
+    // TODO Auto-generated method stub
+}
+</code></pre>
+
+<p>}</p>
+
+<p></pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e6849fe58692e5b08fe8aeb0" title="感冒小记">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e7aa81e58f98" title="突变">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2009-11-26</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#code-ref">code <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#java-ref">java <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#swing-ref">swing <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%8F%AF%E8%A7%86%E5%8C%96-ref">可视化 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%B0%8F%E6%B8%B8%E6%88%8F-ref">小游戏 <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%89%AB%E9%9B%B7-ref">扫雷 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BC%96%E7%A8%8B-ref">编程 <span>31</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

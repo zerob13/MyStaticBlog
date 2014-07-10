@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Shell编程学习，两个小程序</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>Shell编程学习，两个小程序 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>shell编程真不好写阿。。。脚本语言都是有那么一些麻烦的特性在。。。
+最近做实验的时候写了两个学习性的小程序，还不错感觉有点感觉了~哈哈
+第一个是一个函数，可以计算任意个正整数的和,如果输入错误就返回-1
+<pre lang="bash"></p>
+
+<p>#!/bin/bash</p>
+
+<h1><a style="display: block;" name="mysum" href="#mysum"></a>mysum</h1>
+
+<p>sum=0;
+    function mysum(){
+        while [ $# -ne 0 ]
+        do
+            if [ <code>echo $1 | grep  &quot;^[0-9][0-9]*$&quot;</code> ]
+            then
+                sum=$(expr $sum + $1)
+                shift
+            else
+                sum=-1
+                break
+            fi</p>
+
+<pre><code>    done
+echo $sum
+</code></pre>
+
+<p>}
+</pre>
+然后是调用这个函数的测试脚本
+<pre lang="bash">
+#!/bin/bash
+. ./mysum
+mysum $@
+</pre>
+然后是一个简单的通讯录程序，我想实现的比较好的，可惜技术不够。。。最后做的比较挫。。。大家凑合看吧。。
+<pre lang="bash">
+#!/bin/bash</p>
+
+<h1><a style="display: block;" name="menu" href="#menu"></a>MENU</h1>
+
+<p>#</p>
+
+<p>function find()
+{
+    echo &ldquo;input Name:&rdquo;
+    read name
+    cat data.txt |grep &ldquo;^$name&rdquo;
+    read a
+}</p>
+
+<p>function add()
+{
+    echo &ldquo;input Name:&rdquo;
+    read name
+    echo &ldquo;input Number:&rdquo;
+    read number
+    te=&ldquo;$name $number&rdquo;
+    echo $te
+    echo $te &gt;&gt;data.txt
+    read a</p>
+
+<p>}
+function Edit()
+{
+    echo &ldquo;input Old Name:&rdquo;
+    read nameo
+    echo &ldquo;input New Name:&rdquo;
+    read namen
+     echo &ldquo;input Old Number:&rdquo;
+    read numbero
+     echo &ldquo;input New Number:&rdquo;
+    read numbern
+    teo=&ldquo;$nameo $numbero&rdquo;
+    ten=&ldquo;$namen $numbern&rdquo;
+     sed &lsquo;/$teo/d&rsquo; data.txt
+     echo $ten &gt;&gt;data.txt<br />
+}</p>
+
+<p>if [ -f data.txt ]
+then
+echo
+else
+&ldquo;&rdquo;&gt;&gt;data.txt
+fi</p>
+
+<p>while ls &gt; /dev/null 2&gt;&amp;1
+do
+clear
+echo
+echo
+echo
+echo
+echo &ldquo; 1: Show Date and Time&rdquo;
+echo &ldquo; 2: Find Phone Number&rdquo;
+echo &ldquo; 3: Add Phone Number Record&rdquo;
+echo &ldquo; 4: Edit Phone Number Record&rdquo;
+echo &ldquo; 5: Exit&rdquo;
+echo -e &ldquo;Enter your choice: \c&rdquo;
+read option
+case $option in
+  1) date
+    read $a;;
+  2) echo &ldquo;Finding&hellip;&rdquo;;
+        find;;
+  3) echo &ldquo;Add&hellip;&rdquo;;add ;;
+  4) echo &ldquo;Editing&hellip;&rdquo;;Edit ;;
+  5) echo &ldquo;Bye&hellip;&rdquo;;break ;;
+  *) echo &ldquo;Invalid input&rdquo;;;
+esac
+echo
+done
+</pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e8a1a2e5b79ee8a18cefbc8ce695a3e78987" title="衢州行，散片">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e8a1a2e5b79ee6b19fe5b1b1-ver-2" title="衢州&amp;江山.Ver 2">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-05-26</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#bash-ref">bash <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#linux-ref">linux <span>5</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#shell-ref">shell <span>4</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#unix-ref">unix <span>3</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%AD%A6%E4%B9%A0-ref">学习 <span>23</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BC%96%E7%A8%8B-ref">编程 <span>31</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E8%84%9A%E6%9C%AC-ref">脚本 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

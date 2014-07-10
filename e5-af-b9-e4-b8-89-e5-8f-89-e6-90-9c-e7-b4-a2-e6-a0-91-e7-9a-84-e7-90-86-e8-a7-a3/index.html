@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>对三叉搜索树的理解</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>对三叉搜索树的理解 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>对于字符串的高效处理一般都是用字典树——Trie，或者ac自动机的。但是字典树对于大量数据的空间的开销相当大，特别我们的字典中不仅仅是26个字母组成的字符串时空间的损耗就会巨大无比。。。
+三叉搜索树就是一种比较好的解决方法，我第一次看到的时候时在最近的《程序员》杂志上的一篇文章——《用三叉搜索树实现高效率的“自动完成”》，是一个.net大牛写的～于是我便对这个产生了兴趣，在折腾几天后，终于用java也写了一个很挫的三叉搜索树（见<a href="http://www.zerob13.in/?p=270">用三叉搜索树实现高效字符查找</a>）。
+其实所谓的三叉树就是舍去了Trie的多余的指针，而是把一个个树套在一起，每个节点压缩成三个方向。如果匹配的话就走中间方向的指针，如果不匹配，那么就走左或者右指针。选左选右则是这个数据结构优化的一个好地方，我用了字母顺序，文章作者说这个是最挫的方法。。。窘一个。。。好方法我还没有想到，因为不会写自平衡的树。。。杯具一个。。。
+这里有一个例子，假如我们存入&rdquo;AB&rdquo;,&ldquo;ABBA&rdquo;.&ldquo;ABCD&rdquo;.&ldquo;BCD&rdquo;,这几个单词，那么三叉树就会出现如下的储存方式。。。</p>
+
+<p><img class="alignnone size-full wp-image-296" title="tt" src="http://www.zerob13.in/wp-content/uploads/2009/11/tt.jpg" alt="tt" width="640" height="480" /></p>
+
+<p>红线表示匹配的箭头～黄色的表示单词结尾</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e58699e4ba86e4b8aae5b08fe7a88be5ba8fefbc8ce8a7a3e695b0e78bace794a8efbd9e" title="写了个小程序，解数独用～">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/2009e5a496e68b8de5b08fe59381efbd9e" title="2009外拍小品～">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2009-11-09</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#java-ref">java <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#Ternary-Search-Tree-ref">Ternary Search Tree <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E4%B8%89%E5%8F%89%E6%A0%91-ref">三叉树 <span>3</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86-ref">字符串处理 <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%90%9C%E7%B4%A2%E6%A0%91-ref">搜索树 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ref">数据结构 <span>7</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

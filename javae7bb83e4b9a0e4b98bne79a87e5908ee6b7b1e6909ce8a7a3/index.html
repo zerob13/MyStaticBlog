@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>java练习之N皇后深搜解</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>java练习之N皇后深搜解 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>之前一直脑残，代码也不会写了，最近决定重新开始发奋，记得大一的时候第一个像样的c程序就是八皇后问题。于是就有了今天的N皇后java版本。
+  不是什么高效的版本，就是最简单最好理解的深搜，无优化，大牛无视。
+  <pre lang="java"></p>
+
+<p>package com.zerob13.eightqueen;</p>
+
+<p>/**
+ * @author yanglingfeng
+ *
+ */
+public class EightQueen {
+    private boolean[][] broad;
+    private boolean[] hashc;
+    int count;
+    private boolean[] hashlx;
+    private boolean[] hashrx;
+    private int N;
+    public EightQueen(int n){
+        this.N=n;
+        count=0;
+        this.broad=new boolean[n][];
+        for(int i=0;i&lt;n;i++)
+            this.broad[i]=new boolean[n];
+        this.hashc=new boolean[n];
+        this.hashlx=new boolean[n+n];
+        this.hashrx=new boolean[n+n];</p>
+
+<pre><code>}
+public EightQueen(){
+    int n=8;
+    this.N=n;   
+    count=0;
+    this.broad=new boolean[n][];
+    for(int i=0;i&lt;n;i++)
+        this.broad[i]=new boolean[n];
+    this.hashc=new boolean[n];
+    this.hashlx=new boolean[n+n];
+    this.hashrx=new boolean[n+n];
+
+}
+public int shownum()
+{
+    return count;
+}
+private void show(){
+    int i,j;
+    count++;
+    for(i=0;i&lt;N;i++)
+    {
+        for(j=0;j&lt;N;j++)
+        {
+            if(broad[i][j])
+            System.out.print(&quot;Q&quot;);
+            else
+                System.out.print(&quot;.&quot;);
+        }
+        System.out.println();
+    }
+    for(i=0;i&lt;N;i++)
+    System.out.print(&quot;-&quot;);
+    System.out.println();
+}
+public void dfs(int now){
+    int i;
+    if (now&gt;=N){
+        this.show();
+        return ;
+    }
+    for(i=0;i&lt;N;i++)
+    {
+        if(broad[now][i]==false&amp;&amp;hashc[i]==false&amp;&amp;hashlx[i+now]==false&amp;&amp;hashrx[i-now+N]==false){
+            hashc[i]=true;
+            hashlx[i+now]=true;
+            hashrx[i-now+N]=true;
+            broad[now][i]=true;
+            dfs(now+1);
+            hashc[i]=false;
+            hashlx[i+now]=false;
+            hashrx[i-now+N]=false;
+            broad[now][i]=false;
+        }
+    }
+    return ;
+
+}
+</code></pre>
+
+<p>}
+</pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e6999ae4b88ae689abe8a197efbd9e" title="晚上扫街～">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/javae79a84dance-linkse8a7a3e695b0e78bac" title="java的dance links解数独">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2009-10-30</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#eightqueen-ref">eightqueen <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#j2se-ref">j2se <span>4</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#java-ref">java <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#n%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98-ref">n皇后问题 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%85%AB%E7%9A%87%E5%90%8E-ref">八皇后 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BC%96%E7%A8%8B-ref">编程 <span>31</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

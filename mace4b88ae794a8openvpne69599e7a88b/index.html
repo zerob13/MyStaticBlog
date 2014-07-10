@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>mac上用openvpn教程</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>mac上用openvpn教程 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <h3><span style="color: #339966;">首先我们需要的工具是~Tunnelblick，这个软件。
+你可以去这里下载
+<a href="http://code.google.com/p/tunnelblick/">http://code.google.com/p/tunnelblick/</a></span> <span style="color: #339966;">
+安装，很简单。下载下来是一个dmg文件，打开dmg文件后，你会看到下图：
+<a href="http://www.zerob13.in/wp-content/uploads/2010/05/screen-capture.jpg"><img class="alignnone size-full wp-image-1017" title="screen-capture" src="http://www.zerob13.in/wp-content/uploads/2010/05/screen-capture.jpg" alt="" width="576" height="461" /></a></span> <span style="color: #339966;">
+双击那个隧道图标的文件，会提醒你安装。然后双击Tunnelblick，让其运行，第一次使用会出现下图所示，点击“安装及编辑范例设定档”，关闭弹出的对话框。
+<a href="http://www.zerob13.in/wp-content/uploads/2010/05/图片-9.jpg"><img class="alignnone size-full wp-image-1019" title="图片 9" src="http://www.zerob13.in/wp-content/uploads/2010/05/图片-9.jpg" alt="" width="500" height="300" /></a></span> <span style="color: #339966;">
+打开配置文件夹（\Users\你登陆的用户名\Library\Application Support\Tunnelblick\Configurations）
+把你下载来的ca.crt ,client.crt,client.key放入
+然后打开openvpn.conf文件，你需要修改如下几项
+remote my-server-1 1194
+把my-server-1改成你的openvpn服务器地址（如果必要后面的端口也要改成相应的）
+ca ca.crt
+cert client.crt
+key client.key
+这三行需要对应你的三个文件，如果你的文件名不是ca.crt,client.crt,client.key你就要做相应的修改。
+修改完之后，保存。（需要root权限，也就是你需要输入一次你的管理员密码）
+这时候，你看见你屏幕的右上角有个隧道图标，点击一下，然后选择 Connect 'openvpn'  即可享受openvpn的服务
+<a href="http://www.zerob13.in/wp-content/uploads/2010/05/Screen-shot-2010-05-17-at-11.23.18-PM.jpg"><img class="alignnone size-full wp-image-1020" title="Screen shot 2010-05-17 at 11.23.18 PM" src="http://www.zerob13.in/wp-content/uploads/2010/05/Screen-shot-2010-05-17-at-11.23.18-PM.jpg" alt="" width="320" height="216" /></a></span></h3>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e59ca8e8b7afe4b88a" title="在路上">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e698a5e6b8b8e697b6e68891e79a84e59084e7a78de5bda2e68081" title="春游时我的各种形态">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-05-18</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E9%9A%8F%E4%BE%BF%E5%86%99%E5%86%99-ref">随便写写 <span>154</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#mac-ref">mac <span>11</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#openvpn-ref">openvpn <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#tunnelblick-ref">tunnelblick <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#vpn-ref">vpn <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%95%99%E7%A8%8B-ref">教程 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>从 Wordpress 迁移到 Ghost</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>从 Wordpress 迁移到 Ghost </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>前一篇文章说了我今天抛弃了之前的 Wordpress 博客迁移到了现在的 <a href="ghost.org">Ghost</a> 平台上，所以把过程记录下来，自己安装的时候也没搜到什么中文资料，就当造福后人了~哈哈</p>
+
+<h4>注意：Ghost是一个刚刚出来没多久的博客环境，各种功能都还很欠缺，我这里用的v0.3.3版本，目前几乎没有搜索功能，没有用户权限控制(仅支持单用户)的功能，没有评论功能，没有分类功能等等。</h4>
+
+<p>好了，切入正题，先说说我们需要准备些什么：</p>
+
+<ul>
+<li>一台VPS(我这里用的是Linode的最低配置，系统是CentOS 6）</li>
+<li>域名</li>
+<li>一台有Shell的电脑（噗，我只是卖个萌）</li>
+</ul>
+
+<p>再说说目标，我的 VPS 上跑着几个 Wordpress 和其他几个 PHP 小玩具,目前是 Nginx + Mysql + PHP 所以我希望最后不影响PHP环境，并且自己的博客切为 Ghost。仔细思考下，打算用 Nginx proxy_pass 到 Node.js 的环境上面来实现这个环境。</p>
+
+<h2><a style="display: block;" name="安装-node.js" href="#安装-node.js"></a>安装 Node.js</h2>
+
+<p>因为 Ghost 是跑在 Node.js 上的，所以第一步肯定是安装 Node.js 我参考了<a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">github上的一个教程</a> ，考虑到节省大家的时间，我就直接把代码贴上来。
+先下载相应的源</p>
+
+<pre><code>curl -O http://download-i2.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+</code></pre>
+
+<p>然后装一下</p>
+
+<pre><code>sudo rpm -ivh epel-release-6-8.noarch.rpm
+</code></pre>
+
+<p>最后就可以用 yum 来安装了</p>
+
+<p><code>sudo yum install npm</code></p>
+
+<p>搞定第一步，现在你可以用如下命令检查下你的 node.js 的版本了</p>
+
+<p><code>node -v</code></p>
+
+<h2><a style="display: block;" name="下载安装-ghost" href="#下载安装-ghost"></a>下载安装 Ghost</h2>
+
+<p>第二步就很简单了，就是把<a href="http://ghost.org/download">这里</a>的zip文件下载下来。用命令表示如下：</p>
+
+<p><code>wget -c http://ghost.org/zip/ghost-0.3.3.zip</code></p>
+
+<p>然后解压</p>
+
+<p><code>unzip ghost-0.3.3.zip</code></p>
+
+<p>把解压产物放到你想存放的网址位置，我这里放到了 /home/www/blog/下面，<strong>之后都的配置都会用这个地址来指代 Ghost 所在目录</strong>，记得到时候要替换成自己的目录。</p>
+
+<p>下载的操作到这里就结束了，然后是安装，很简单两条命令搞定</p>
+
+<pre><code>cd /home/www/blog/
+npm install --production
+</code></pre>
+
+<h2><a style="display: block;" name="配置-ghost" href="#配置-ghost"></a>配置 Ghost</h2>
+
+<p>Ghost 的配置文件在 /home/www/blog/config.js 二话不说 Vim 进去，配置很简单，详细的内容可以去官网看文档，我这里就说下我的配置过程。</p>
+
+<p>找到如下字段</p>
+
+<blockquote>
+<p>url: &lsquo;http://my-ghost-blog.com&rsquo;</p>
+</blockquote>
+
+<p>把其中的网址替换成自己博客的网址，我这里是这样的：</p>
+
+<blockquote>
+<p>url: &lsquo;http://zerob13.in&rsquo;</p>
+</blockquote>
+
+<p>mail 部分可以暂时不去搞，官网有很详细的<a href="http://docs.ghost.org/mail/">教程</a>，不过我建议直接申请一个 Gmail来用。
+然后就是设置数据库部分，虽然看代码 Ghost 是支持 MySQL 的，但是考虑到 MySQL 上数据比较重要，而且博客也没多少数据吞吐，所以我这里沿用了默认的Sqlite,你可以找到如下字段:</p>
+
+<p><code>database: {
+            client: 'sqlite3',
+            connection: {
+                filename: path.join(__dirname, '/content/data/ghost-dev.db')
+            },
+            debug: false
+        },</code></p>
+
+<p>可以考虑改一下数据库的名字。</p>
+
+<p>Ghost 的配置有三套，一套是 DEV 的环境 一套是 Production 环境，还有一套 Test 环境 ，建议配置好前两套就好了。</p>
+
+<p>配置好后可以运行下试试
+<code>
+cd /home/www/blog/
+npm start &amp;
+</code></p>
+
+<h2><a style="display: block;" name="配置-nginx" href="#配置-nginx"></a>配置 Nginx</h2>
+
+<p>由于我已经安装了 Nginx ，并且考虑到 Nginx 的安装是在太简单了，所以也就不在这里写安装过程，直接进入配置的阶段。
+再看下 Ghost 的配置文件/home/www/blog/config.js 中有一段是这样的
+<code>server: {
+            host: '127.0.0.1',
+            port: '2368'
+        }</code></p>
+
+<p>所以 Ghost 届时会运行在 127.0.0.1:2368 中，那么我们的 Nginx 配置已经呼之欲出了。先贴上我的配置:
+<code>
+server{
+                listen      80;
+                server_name zerob13.in www.zerob13.in;
+                location ^~/wp-content/ {
+                        root /home/wwwroot/wordpressPath/;
+                        }
+                location / {
+                        proxy_pass http://127.0.0.1:2368/;
+                        proxy_set_header Host $host;
+                        proxy_buffering off;
+                        }
+     access_log /home/www/blog  blog;
+        }
+</code></p>
+
+<p>好，现在我来解释下为什么要这样配置。前两行就是域名和端口的监听，一目了然。第一个 location 是用来匹配之后导入 Wordpress 文章后一个问题，这里先不讲。关键就是第二个 location / 这个匹配就成功把域名访问过来代理到了 node.js 的 Ghost 这个 app 上。</p>
+
+<p>保存好配置后，就可以重启下 nginx</p>
+
+<p><code>service nginx restart</code></p>
+
+<p>这时候访问你的博客网址，你应该就可以看到 Ghost 开始运行了，一个漂亮而简洁的欢迎界面。访问 <strong>yourblogadress/ghost/signup</strong> 来进行帐号注册，然就可以进入到后台配置 Ghost 了。这部分官网也有非常详细的<a href="http://docs.ghost.org">教程</a> ,所以也不展开赘述。</p>
+
+<h2><a style="display: block;" name="从-wordpress-迁移数据" href="#从-wordpress-迁移数据"></a>从 WordPress 迁移数据</h2>
+
+<p>这部分不需要再打命令了，单纯的装个插件就好，插件是 Ghost 团队写的，<a href="http://wordpress.org/plugins/ghost/">点这里看详情</a></p>
+
+<p>给 WordPress 装好插件后，登录 Wordpress 后台，选择 <strong>工具-&gt; Export to Ghost</strong> 点击最后的 <strong>Download Ghost File</strong> 你会下载到一个 JSON 文件，一般就几兆的样子。</p>
+
+<p>然后访问 <strong>yourblogadress/ghost/debug/</strong> 来进行导入，导入的过程可能有点慢，而且插入 Tag 信息的时候还可能出错，不要紧张，文章都会导入成功的。等到导入过程完成后，这时候你就可以看到你的博客文章都在了。</p>
+
+<p>本来到这里教程就结束了，不过出现了一个问题，之前博客上的图都看不到了，为什么呢？我看了下代码，发现都指向了 <strong>wp-content/upload</strong> 这个目录下面的图，因为这是在 Wordpress 下写的文章，为了避免这个问题所以我在之前配置 nginx 的时候加入了另外一条  location ^~/wp-content/ 来避免这个问题，这样当访问这些图片的时候会自动转到老博客的目录下从而正常显示这些文件（当然你也可以自己单纯备份一下这些文件做个静态跳转）。</p>
+
+<p>由于 Ghost 目前不支持评论，而且我也已经被垃圾广告评论搞的倒了胃口，所以也不打算加入评论系统，如果有问题的话欢迎和我邮件交流 zerob13@gmail.com</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/trans-my-blog" title="迁移博客">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/recent-zatan" title="近况杂谈">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2013-10-19</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#ghost-ref">ghost <span>3</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#wordpress-to-ghost-ref">wordpress to ghost <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#export-from-wordpress-ref">export from wordpress <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E8%BF%81%E7%A7%BB-wordpress-ref">迁移 wordpress <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#wordpress-ref">wordpress <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

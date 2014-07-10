@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>简单写的遗传算法求极大值</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>简单写的遗传算法求极大值 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>新手，比较简单，凑合看看~
+<pre lang="CPP">
+/*    Copyright &copy; 2010  zerob13 <a href="mailto:zerob13@gmail.com">zerob13@gmail.com</a> */
+#include <iostream>
+#include<time.h>
+#include<stdlib.h>
+#include<stdio.h>
+#include<string.h>
+using namespace std;
+#define MAXNUM 1023;//种群范围
+#define NUMLEN 10//种群编码长度
+#define STNUM 200//种群个体数目
+#define PC 0.007//变异率
+#define AGE 100//迭代种群代数
+double Fsun;//储存所有值的和
+void itoa(int a,int ans[])//输入整数a，和数组ans，然后，a的二进制会存放在ans里。（当然你也可以直接用系统自带的itoa)
+{
+    int i,j;
+    int co=0;
+    while(a!=1&amp;&amp;a){
+        ans[co++]=a%2;
+        a/=2;
+    }
+    if(a)
+    {
+        ans[co++]=1;
+    }
+    for(i=0,j=NUMLEN-1;i&lt;j;j&ndash;,i++)
+    {
+        ans[i]^=ans[j];
+        ans[j]^=ans[i];
+        ans[i]^=ans[j];
+    }
+}</p>
+
+<p>int atoi2(int ans[])//输入二进制数组返回整数值 如数组ans[]={0,0,0,0,0,1,0,1}，就会返回5
+{
+    int an=0,i;
+    for(i=0;i&lt;NUMLEN;i++)
+    {
+        an+=ans[i]*(1&lt;&lt;(NUMLEN-1-i));
+    }
+    return an;
+}</p>
+
+<p>void getrand(int ra[])//获取1~MAXNUM的随机初始种群 放在你输入的数组ra[]中
+{</p>
+
+<pre><code>srand(time(NULL));
+for(int i=0;i&lt;STNUM;i++)
+{
+    ra[i]=1+rand()%MAXNUM;
+}       
+</code></pre>
+
+<p>}</p>
+
+<p>void getP(double P[])//获取0~1随机数 放在你输入的数组P[]中，作为选择概率用
+{
+    srand(time(NULL));
+    for(int i=0;i&lt;STNUM;i++)
+    {
+        P[i]=double(rand()%10000)/10000.0;
+    }</p>
+
+<p>}</p>
+
+<p>int getValue(int va)//获取适应度
+{
+    return va*va;
+}</p>
+
+<p>double getchoseP(int va)//获取选择概率
+{
+    return (double)va/Fsun;
+}</p>
+
+<p>void creatAP(double P[],double AP[])//获取积累概率
+{
+    int i,j;
+    for(i=0;i&lt;STNUM;i++)
+    {
+        AP[i]=0.0;
+        for(j=0;j&lt;=i;j++)
+        {
+            AP[i]+=P[j];
+        }
+    }
+    return ;
+}</p>
+
+<p>int getPcNum()//获取变异位数
+{
+    return (int)(PC*NUMLEN*STNUM);
+}</p>
+
+<p>void Exchange(int ans[STNUM][NUMLEN])//交叉运算
+{
+    int i,j,k,c;
+    k=getPcNum();
+    for(i=0;i&lt;STNUM-1;i+=2)
+    {
+        for(j=NUMLEN-5;j&lt;NUMLEN;j++)
+        {
+            ans[i][j]^=ans[i+1][j];
+            ans[i+1][j]^=ans[i][j];
+            ans[i][j]^=ans[i+1][j];
+        }</p>
+
+<pre><code>}
+while(k--){     
+    c=rand()%(NUMLEN*STNUM);
+    ans[c/NUMLEN][c%STNUM]^=1;
+
+}
+
+
+return ;
+</code></pre>
+
+<p>}</p>
+
+<p>int main (int argc, char * const argv[]) {</p>
+
+<pre><code>int ans[STNUM][NUMLEN];
+int ra[STNUM];
+int rb[STNUM];
+int i,j;
+double P[STNUM];
+double AP[STNUM];
+double Cp[STNUM];
+int maxx,maxn;
+int flag=0;
+memset(ans,0,sizeof(ans));
+for(Fsun=0,i=1;i&lt;512;i++)
+{
+    Fsun+=getValue(i);
+}
+maxx=0;
+maxn=0;
+getrand(ra);
+for(i=0;i&lt;STNUM;i++){
+
+    if(maxx&lt;getValue(ra[i]))
+    {
+        maxx=getValue(ra[i]);
+        maxn=ra[i];
+    }
+
+}
+
+while(flag&lt;AGE)
+{
+    flag++;
+    for(i=0;i&lt;STNUM;i++)
+    {
+        Cp[i]=getchoseP(getValue(ra[i]));
+    }
+    creatAP(Cp,AP);
+    getP(P);
+    for(i=0;i&lt;STNUM;i++)
+    {
+        for(j=0;j&lt;STNUM;j++)
+        {
+            if(j==0)
+            {
+                if(P[i]&lt;=AP[j])
+                {
+                    rb[i]=ra[j];
+                    break;
+                }
+            }else {
+                if(P[i]&lt;=AP[j]&amp;&amp;P[i]&gt;AP[j-1]){
+
+                        rb[i]=ra[j];
+                        break;
+                    }
+            }
+
+        }
+        itoa(rb[i],ans[i]);
+    }
+
+    Exchange(ans);
+    for(i=0;i&lt;STNUM;i++)
+    {
+        ra[i]=atoi2(ans[i]);
+
+        if(getValue(ra[i])&gt;maxx)
+        {
+            flag=0;
+            maxn=ra[i];
+            maxx=getValue(ra[i]);
+        }
+    }
+}
+printf(&quot;%d\n&quot;,maxn);
+
+return 0;
+</code></pre>
+
+<p>}
+</pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e4b880e7bb84e5b08fe59381" title="一组小品">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e7a59de88081e5a4a7e7949fe697a5e5bfabe4b990" title="祝老大生日快乐">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-05-05</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#C%23-ref">C# <span>8</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#code-ref">code <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#life-ref">life <span>299</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F-ref">程序 <span>13</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95-ref">遗传算法 <span>2</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

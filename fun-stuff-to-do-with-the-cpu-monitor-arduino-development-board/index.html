@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>趣味玩意，用Arduino开发板做CPU监视器</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>趣味玩意，用Arduino开发板做CPU监视器 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>Arduino是什么？
+不知道自己google去，简单的说就是一个给我这种嵌入式完全不懂的文盲来做机器人之流的电子小玩意的平台，开发很简单，就是类似与c语言的语法，上手极快，关键是还可以通过一定的手段和Andriod联动。
+好吧，这次和Andriod无关，只是我突发奇想罢了。我一直希望有个小屏幕可以监视我的系统状态，比如CPU占用，内存占用等等。可惜最便宜的usb屏幕也要1000多块，太贵了，不实惠，于是就萌发用Arduino自己做一个。
+设备很简单，就是一块Arduino的板子，一块LCD1602屏幕，一台MAC。我就只做了一个简单的CPU占用的东西，如图：</p>
+
+<p><a title="IMG_9191" href="http://farm6.static.flickr.com/5170/5292696527_f92c8d9d41_b.jpg"><img class="slickr-post" src="http://farm6.static.flickr.com/5170/5292696527_f92c8d9d41.jpg" alt="IMG_9191" width="500" height="333" /></a></p>
+
+<p>先说说我的思路吧，首先从Mac上通过一个程序读取到CPU占用率，然后通过串口发送到板子上，板子上缓冲一下，再输出到LCD屏幕。流程非常简单。不过问题还是蛮多。
+首先，怎么读取CPU占用率？
+我先是打算用Cocoa的系统函数来调用，查了半天Mac的资料后果断放弃，太复杂了，而且我Object-c又不是很熟悉。之后的想法是打算利用shell程序来完成，通过C和shell中的top命令交互来实现。这里有个小插曲，因为Linux下面其实读取这些可以直接去/proc/这个虚拟目录下读取，但是Mac这类系统是没有这个虚拟目录的，所以只能用top，而且Mac的top函数的参数又和Linux之类的GNU的top不同。总之折腾了很久，才有了下面这句销魂的shell命令</p>
+
+<pre lang="bash">$ top -n0 -l1</pre>
+
+<p>啥意思？很简单，就是不要显示进程，top执行一次就自动退出，就那么简单。至于为什么可以达到这样的效果，请有mac或者别的BSD系统的同学man top一下就好。
+有了这个就方便的多了，c语言部分去掉串口通讯的就只很简单的一部分了，就是调用shell函数，返回，字符串处理，这几个问题。串口通讯的代码早就很熟悉了，最近一直开发这种东西(其实python下面串口通讯会简单的多，不过我比较熟悉C，所以还是选择了C）
+关键代码如下：
+<pre lang="bash">
+FILE *fp;
+char a[256];
+fp=popen(&ldquo;top -n0 -l1&rdquo;,&ldquo;r&rdquo;);
+fgets(a,sizeof(a),fp)
+</pre>
+之后的过程势如破竹，Arduino平台上的更加容易，就是简单的读写罢了。直接上代码就好：</p>
+
+<p><pre lang="CPP">
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h></p>
+
+<p>LiquidCrystal_I2C lcd(0x27,16,2);
+byte line = 0;               // track which line of the display we are on</p>
+
+<p>void setup(){
+    // set up the LCD&rsquo;s number of columns and rows:
+    lcd.init();
+    lcd.backlight();
+  // initialize the serial communications:
+  Serial.begin(9600);
+     lcd.setCursor(0,0);
+   lcd.clear();</p>
+
+<p>}</p>
+
+<p>void loop()
+{
+ char input;
+  while(Serial.available() &gt; 0) {
+    input = Serial.read();
+    switch(input) {
+      case 0:                   // line feed
+        lcd.clear();
+        break;
+      default:
+         if(input&gt;31)
+          lcd.print(input);<br />
+    }
+  }</p>
+
+<p>} </pre>
+最后再上一个图～哈：</p>
+
+<p><a title="IMG_9194" href="http://farm6.static.flickr.com/5048/5292696789_ea7e91baec_b.jpg"><img class="slickr-post" src="http://farm6.static.flickr.com/5048/5292696789_ea7e91baec.jpg" alt="IMG_9194" width="500" height="333" /></a></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/recently" title="最近">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/the-remaining-section-of-the-magic-egg" title="神奇的剩蛋节">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-12-27</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#Arduino-ref">Arduino <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#C%23-ref">C# <span>8</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#cpu-ref">cpu <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#program-ref">program <span>6</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%B5%8C%E5%85%A5%E5%BC%8F-ref">嵌入式 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F-ref">程序 <span>13</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

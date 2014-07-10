@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>CodeBrowserHD 只是补完大学的遗憾</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>CodeBrowserHD 只是补完大学的遗憾 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>CodeBrowser，是我大学时候刚刚开始学习android开发的第一个程序。简单的来说就是在手机上看代码的一个软件，当时研究了一堆语义分析的东西，发现太难搞不来，好在万能的Google大神早就有了成熟的web 代码高亮的解决方案：</p>
+
+<p><a href="http://code.google.com/p/google-code-prettify/">google-code-prettify</a></p>
+
+<p>于是就基于这个高亮的js，然后做了一个webview，一个文件选择的ListView，然后拼凑而成的一个app。最近终于有个闲下来的周末，就拿出来重构了一下，丢到GitHub上开源。虽然代码丑的一比，欢迎大家拍砖，您的鄙视是我最好的学习资料~</p>
+
+<p>重构前的版本是长成这样的：</p>
+
+<p><img class="aligncenter" src="http://pic.yupoo.com/zerob13_s/BFgO8ddK/medish.jpg" alt="" /></p>
+
+<p>&nbsp;</p>
+
+<p>重构完成后的版本长的是这样的：</p>
+
+<p><img class="aligncenter" src="http://pic.yupoo.com/zerob13_s/CsqClu4v/medish.jpg" alt="" /></p>
+
+<p>&nbsp;</p>
+
+<p>优化了很多代码，从原来傻乎乎的读写文件，各种奇怪的写法，到现在的大部分操作都内存中搞定，增加主题选择，增加编码选择等等~</p>
+
+<p>喜欢的可以上Google Play下载：</p>
+
+<p><a href="https://play.google.com/store/apps/details?id=in.zerob13.CodeBrowserHD&amp;feature=search_result">猛戳这里去官方市场下载</a></p>
+
+<p>当然，如果愿意去鄙视下我的代码的也可以去这里获得最新代码</p>
+
+<p><a href="http://github.com/zerob13/CoderBrowserHD">猛戳这里去GitHub 页面</a></p>
+
+<p>算是了却大学一个遗憾~sigh~</p>
+
+<p>&nbsp;</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/wang-shi-bu-ke-zhui" title="往事不可追">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/yi-dian-fen-nu-yi-dian-si-kao" title="一点愤怒，一点思考">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2012-12-02</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#Android-ref">Android <span>25</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#CodeBrowser-ref">CodeBrowser <span>5</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#github-ref">github <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#google-play-ref">google play <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%BC%80%E6%BA%90-ref">开源 <span>2</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

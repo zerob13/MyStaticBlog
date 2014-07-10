@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Android 应用如何判断是否是平板</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>Android 应用如何判断是否是平板 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>从 Kindle Fire 到 Nexus 4 ，然后一坨坨的诡异山寨平板，现在 Android 平板也算是有一定的市场了。做 App 的时候自然会考虑去兼容一下平板版本， 兼容的方法不外乎两种，一个是再开发一套UI，然后可以出个HD版本或者直接包含在同一个APK中，另外一种就是等比缩放，让控件自适应。</p>
+
+<p>听起来好像后者很厉害的样子，其实后者大部分情况都是很难看的，拉大也好，压缩也好，总是怪怪的。我个人是比较建议一个 APK 两套 UI 自动切换的模式，因为 Android 应用的包也不大，多一套 UI 也就是几百k到1M左右的事情，用户一般也都是 WIFI 下面更新应用，那么何乐而不为呢？</p>
+
+<p>既然如此，那么我们就会涉及到一个问题，就是在应用中判断当前是平板还是手机，考虑到主流平板现在都是 3.2+ 的系统，这里主要讨论的是识别  3.2 以后的机器，当然出于兼容性考虑，后面我也会给出 2.x 的平板识别的方法。</p>
+
+<p>最早的时候，我解决这个问题第一个想法是通过分辨率或者再考虑像素密度来解决。如果单纯考虑分辨率，大概就是这样的处理方式：</p>
+
+<p><code>public static boolean isTablet(Activity aActivity) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        aActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        if (width &gt; 1023 || height &gt; 1023) {
+            return true;
+        } else {
+            return false;
+        }
+    }</code></p>
+
+<p>It works.只能那么说，这个方法我用了很久，基本上也没出啥问题，但是总感觉不够美观，不够 Android 的风格，到是像头痛医头，脚痛医脚的感觉，所以闲下来的时候就跑去翻看 <a href="http://developer.android.com" title="Android Deveploer" target="_blank">http://developer.android.com</a> 的一些说法。</p>
+
+<p>很幸运的被我找到了，在<a href="http://developer.android.com/training/multiscreen/screensizes.html#TaskUseSWQuali" title="http://developer.android.com/training/multiscreen/screensizes.html#TaskUseSWQuali" target="_blank">猛击这里查看</a> 这个页面有如下的一段描述:</p>
+
+<blockquote>One of the difficulties developers had in pre-3.2 Android devices was the "large" screen size bin, which encompasses the Dell Streak, the original Galaxy Tab, and 7" tablets in general. However, many applications may want to show different layouts for different devices in this category (such as for 5" and 7" devices), even though they are all considered to be "large" screens. That's why Android introduced the "Smallest-width" qualifier (amongst others) in Android 3.2.</blockquote>
+
+<p>于是认真的看了整个说明，发现其实 对于Android 3.2以后的机器是有比较好的区分方法的，就是通过在资源文件夹后面加 -sw600dp 来区分。比如说你想要在平板展示的layout就放到 layout-sw600dp 目录下，String， styles以及color等等都可以如此。如果是 3.2 以前的机器，可用 -xlarge 来区分。这样就可以将资源文件自动匹配映射，就和做多国语言的 Strings 一样，只要不同文件夹下的同名文件，就会匹配到相应的res中。</p>
+
+<p>那么，这个解决了资源文件的区分，同样的，代码中如何区分的，比如说我平板上的 Button 叫 tButton,手机上的是 pButton，这个总不能通过新建文件夹来指定资源了吧。莫非还是要用上述的那个<del datetime="2013-09-07T15:29:40+00:00">更具</del>根据分辨率的方法？（其实这些资源文件夹区分方式也是系统去根据分辨率区分）显然不是，我们可以用一个更好的方法。分别建立如下文件：</p>
+
+<p>res/values-sw600dp/bools.xml
+<code>&lt;resources&gt;
+    &lt;bool name=&quot;isTablet&quot;&gt;true&lt;/bool&gt;
+&lt;/resources&gt;
+</code>
+res/values/bools.xml</p>
+
+<p><code>&lt;resources&gt;
+    &lt;bool name=&quot;isTablet&quot;&gt;false&lt;/bool&gt;
+&lt;/resources&gt;</code></p>
+
+<p>res/values-xlarge/bools.xml</p>
+
+<p><code>&lt;resources&gt;
+    &lt;bool name=&quot;isTablet&quot;&gt;true&lt;/bool&gt;
+&lt;/resources&gt;</code></p>
+
+<p>然后之前的 isTablet 的判断函数，就可以改成如下所示：</p>
+
+<p><code>public static boolean isTablet(Context context) {
+        return context.getResources().getBoolean(R.bool.isTablet);
+    }</code></p>
+
+<p>是不是美好简洁高端大气上档次了许多？O(∩_∩)O~</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/unlock-mac-os-files-via-terminal" title="批量解除Mac还原后的文件锁">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/xiao-pang-zheng-chuan" title="小庞正传">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2013-09-07</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#Android-ref">Android <span>25</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#android-%E5%BC%80%E5%8F%91-ref">android 开发 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#tablet-ref">tablet <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%8C%BA%E5%88%86%E5%B9%B3%E6%9D%BF-ref">区分平板 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%BC%80%E5%8F%91-ref">开发 <span>8</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BC%96%E7%A8%8B-ref">编程 <span>31</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

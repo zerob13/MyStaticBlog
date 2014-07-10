@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>用栈模拟深度优先搜索</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>用栈模拟深度优先搜索 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>题目原型来自HDUOJ的1372 Knight Moves
+很简单的一个搜索题
+就是告诉你棋盘上的两个点，然后让你算出Knight，也就是国际象棋的马，最少多少步能够从一个点到另一个点。
+算法很简单，深搜即可，这个不是本文讨论的问题。这里我是把原来通过函数递归调用的深搜改为用栈自行模拟
+代码如下：
+<pre lang="CPP">
+#include<stdio.h>
+#include<stack>
+using namespace std;
+#define INF 99999
+int map[8][8];
+int dir[8][2]=;
+struct node{
+    int x,y,t;
+};
+stack<node>zerob;
+int main()
+{
+    char str1[3],str2[3];
+    node head,p;
+    while(scanf(&ldquo;%s %s&rdquo;,str1,str2)==2)
+    {
+        for(int i=0;i&lt;8;i++)
+        {
+            for(int j=0;j&lt;8;j++)
+            {
+                map[i][j]=INF;
+            }
+        }</p>
+
+<pre><code>    while(!zerob.empty()){
+        zerob.pop();
+    }
+    head.x=str1[0]-'a';
+    head.y=str1[1]-'1';
+    head.t=0;
+    int ans=-1;
+    zerob.push(head);
+    while(!zerob.empty()){
+        head=zerob.top();
+        zerob.pop();
+        if(head.x==str2[0]-'a'&amp;&amp;head.y==str2[1]-'1')
+        {
+            if(ans&gt;head.t||ans==-1)
+                ans=head.t;
+
+            continue;
+        }
+        for(int i=0;i&lt;8;i++)
+        {
+            p=head;
+            p.x+=dir[i][0];
+            p.y+=dir[i][1];
+            if(!(p.x&gt;=0 &amp;&amp; p.x&lt;8 &amp;&amp; p.y&gt;=0 &amp;&amp; p.y&lt;8))
+                continue;
+            p.t++;
+            if(map[p.x][p.y]&lt;=p.t)
+                continue;
+            map[p.x][p.y]=p.t;
+            zerob.push(p);
+        }
+    }
+    printf(&quot;To get from %s to %s takes %d knight moves.\n&quot;,str1,str2,ans);
+}
+</code></pre>
+
+<p>}
+</pre>
+后记：
+其实当你理解了深搜和广搜后，你会发现，你写出来的深搜和广搜的代码可以看上去是差不多的。为什么那么说呢，因为，无论那种搜索，都是通过对一个线性表进行处理，只不过是先处理头部还是尾部的问题罢了。处理头部优先的时候，就是广度优先了，因为，头部的都是兄弟节点；而尾部的则是深度优先，因为放入尾部的都是刚刚生产出来的节点——也就是所谓一条路走到死。
+同理可以联想到启发式搜索。启发式搜索就是先以你自定义的优先级处理，然后再以广度为优先级处理。
+所以，归根结底，所谓的搜索，就是一种定义了优先级的枚举。当然，这个只是我个人的理解，欢迎各位大牛拍转。</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e7a9bae997b2e79a84e697b6e58099efbc8ce794a8e6898be69cbae794bbe79a84e89b8be796bce59bbe" title="空闲的时候，用手机画的蛋疼图">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e794a8e69da5e58699e98197e4bca0e7ae97e6b395e79a84e587a0e4b8aae696b9e4bebfe79a84e5b08fe587bde695b0" title="用来写遗传算法的几个方便的小函数">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-03-31</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#dfs-ref">dfs <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%90%9C%E7%B4%A2-ref">搜索 <span>3</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ref">数据结构 <span>7</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%A0%88-ref">栈 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%B7%B1%E6%90%9C-ref">深搜 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%AE%97%E6%B3%95-ref">算法 <span>10</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

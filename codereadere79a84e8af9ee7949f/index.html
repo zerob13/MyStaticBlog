@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>CodeReader的诞生</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>CodeReader的诞生 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>首届Google暑期大学生博客分享大赛——2010 Andriod篇</p>
+
+<p>自从买了android的手机后，用这一直都挺舒服的，从最早买的G1到现在用的G3,android系统的开发让我爱不释手，但是渐渐的我却发现在上面看代码却不是那么的爽快。基本上只能用txt格式的方法看，但是白底黑字的代码是无法让好“色”的我满足的，于是就萌发了自己DIY一个代码阅读器的想法。
+由于这个程序主要是满足我自己的需要，所以就打算写的比较简单一点，支持C/C++/Java的简单高亮就好。所以就写出了CodeReader，先放一些截图吧，然后再慢慢说这个程序诞生的故事。
+<img src="http://www.zerob13.in/wp-content/uploads/2010/04/device.jpg" alt="" />
+<img src="http://www.zerob13.in/wp-content/uploads/2010/04/p_large_8jPz_1fb0000029d12d10.jpg" alt="" />
+<img src="http://www.zerob13.in/wp-content/uploads/2010/04/p_large_8EH7_553200007e762d11.jpg" alt="" />
+开发这个代码阅读器基本上就需要解决以下几个问题：
+1.文件的读写
+2.代码显示容器
+3.代码的缩进
+4.代码的染色
+于是我便开始上网查询了一些资料~我发现文件的读写不是什么大的问题，我有一本关于Android开发的教材中讲到了文件读写的部分，于是便模仿出了下面的代码~
+<pre lang="java">
+package com.zerob13.Codereader;
+import java.util.Vector;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;</p>
+
+<p>public class fileData{
+    public String name;
+    public int type;
+}</p>
+
+<p>class ExpBaseAdapter extends BaseAdapter {
+    private Context mContext;
+    private Vector mItems = new Vector();
+    private LinearLayout layout,layout_more;</p>
+
+<pre><code>public ExpBaseAdapter(Context context) {
+    mContext = context;
+}
+
+public void addItem(fileData it) {
+    mItems.add(it);
+}
+public fileData getItem(int it) {
+    return (fileData)mItems.elementAt(it);
+}
+
+public int getCount() {
+    // TODO Auto-generated method stub
+    return mItems.size();
+}
+
+public long getItemId(int arg0) {
+    // TODO Auto-generated method stub
+    return arg0;
+}
+public int getItemType(int arg0) {
+    // TODO Auto-generated method stub
+    return getItem(arg0).type;
+}
+public void clearItems(){
+    mItems.clear();
+}
+
+public View getView(int arg0, View arg1, ViewGroup arg2) {
+    // TODO Auto-generated method stub
+    //LinearLayout layout=null ;
+    LayoutInflater inflate = (LayoutInflater) mContext.getSystemService(android.content.Context.LAYOUT_INFLATER_SERVICE);
+    arg1 = (LinearLayout) inflate.inflate(R.layout.listfile,null);
+    TextView fm_text_01= (TextView)arg1.findViewById(R.id.fm_text_01);
+    fm_text_01.setText(getItem(arg0).name);
+
+    //Log.v(&quot;vodone&quot;,&quot;&quot;+arg0+&quot; name=&quot;+getItem(arg0).name);
+
+    /*if (getItem(arg0).equals(&quot;.&quot;)){
+
+    }*/
+
+    return arg1 ;
+}
+</code></pre>
+
+<p>}</p>
+
+<p></pre></p>
+
+<p>然后就是选择显示代码的容器了，一开始我的打算是用TextView,但是我发现如果用TextView的话似乎无法让代码高亮起来啊~于是我便先去寻找了一下代码高亮的实现方法。首先是找到了一个windows下的实现，就是利用RichTextView的那种组件来完成。但是似乎android自带的组件里面没有这么一个玩意啊（哈哈，我是初学者，什么都不懂）。后来问了一个朋友被告知，其实所谓的RichTextView就是和浏览器差不多的东西，就是解析了HTML之类的标记性语言然后实现了高亮。这下子就好办了，直接用android自带的webview就可以解决容器的问题了~
+最后就是最关键也是最核心的部分了，如何把纯文本的代码转化成为色彩斑谰的网页呢？这里我用了一个很简单的算法，就是关键词替换~
+基本上就是对文本进行扫描，遇到关键词就替换为html语句，为之上色。很快我的0.1版本就出来了~
+不过问题可不是到这里就结束了，我发现原来文本里面依靠的&rdquo;\t&rdquo;(tab)的缩进在html里面就被忽略了，于是代码就变成了一整块黏合在一起的。怎么办呢？我查阅了html的语法，发现似乎没有什么东西是可以在html里面现实tab缩进的，一时之间卡住了。当时可谓是百思不得其解，后来很偶然的想到，为什么不直接用几个空格来代替一个tab呢？于是问题迎刃而解，不由感慨，有时候很简单的问题，但是却卡在了一条道上导致无法解决啊。
+这样，基本上这个程序就完成了。测试了几段代码，效果还不错~如果大家喜欢的话可以在这里下载哦
+<a href="http://cid-d94239a09a81fece.skydrive.live.com/self.aspx/.Public/Codereader%200.1.apk">猛击这里下载CodeReader</a></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e7bb8de585b4e99a8fe68b8de28094e2809410-7-6" title="绍兴随拍——10.7.6">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e5958aefbc8ce5a4a9e9bb91e4ba86e5958a" title="啊，天黑了啊">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-07-06</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#Android-ref">Android <span>25</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#google-ref">google <span>16</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#java-ref">java <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%BC%80%E5%8F%91-ref">开发 <span>8</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

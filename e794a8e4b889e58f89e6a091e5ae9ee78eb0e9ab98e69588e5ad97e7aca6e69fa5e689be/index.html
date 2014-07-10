@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>用三叉树实现高效字符查找</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>用三叉树实现高效字符查找 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>终于把java的三叉树写出来了～激动！！！热泪～
+   虽然没有实现自平衡的三叉树，这个是按字母序列存储的，也算是三叉树里面最差的一种吧。。。
+   上代码～欢迎各位朋友指教～
+  <pre lang="java">
+package com.zerob13.TernaryTree;
+/**
+ *
+ * @author yanglingfeng
+ */
+public class TernaryTree {
+    private class Node {
+        char m_char;
+        Node left, right, middle;
+        boolean end;
+        public Node(char ch, boolean e) {
+            m_char = ch;
+            end = e;
+        }
+        public Node(char ch, boolean e, Node leftc, Node rightc, Node middlec) {
+            m_char = ch;
+            end = e;
+            left = leftc;
+            right = rightc;
+            middle = middlec;
+        }
+    }
+    private Node root;
+    private int count;
+    /**
+     * 初始化三叉树
+     */
+    public TernaryTree() {
+        clear();
+    }
+    /**
+     * 清除三叉树
+     */
+    public final void clear() {
+        root = null;
+        count = 0;
+    }
+    /**
+     * 插入一个字符串
+     * @param s
+     */
+    public void insert(String s) {
+        root = insert(root, s, 0);
+    }
+    /**
+     * 返回三叉树大小
+     * @return
+     */
+    public int size() {
+        return count;
+    }
+    /**
+     * 返回是否能够找到字符串s
+     * @param s
+     * @return boolean
+     */
+    public boolean contains(String s) {
+        return search(root, s, 0) != null;
+    }
+    private Node search(Node ref, String s, int pos) {
+        if (ref == null) {
+            return null;
+        } else {
+            int cmp = s.charAt(pos) - ref.m_char;
+            if (cmp &lt; 0) {
+                return search(ref.left, s, pos);
+            } else if (cmp &gt; 0) {
+                return search(ref.right, s, pos);
+            } else {
+                if (1 + pos == s.length()) {
+                    if (ref.end) {
+                        return ref;
+                    } else {
+                        return null;
+                    }
+                }
+                return search(ref.middle, s, pos + 1);
+            }
+        }
+    }
+    private Node insert(Node ref, String s, int i) {
+        if (ref == null) {
+            count++;
+            ref = new Node(s.charAt(i), false);
+        }
+        int cmp = s.charAt(i) - ref.m_char;
+        if (cmp &lt; 0) {
+            ref.left = insert(ref.left, s, i);
+        } else if (cmp &gt; 0) {
+            ref.right = insert(ref.right, s, i);
+        } else {
+            if (i + 1 == s.length()) {
+                ref.end = true;
+            } else {
+                ref.middle = insert(ref.middle, s, i + 1);
+            }
+        }
+        return ref;
+    }
+}
+</pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/091106e4ba8ee69dade794b5e589a7e999a2e590ace4baa4e5938de4b990e69c89e6849f" title="091106于杭电剧院听交响乐有感">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e58f91e58f91e887aae5b7b1e5b08fe5b08fe79a84e684bfe69c9b" title="发发自己小小的愿望">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2009-11-06</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#java-ref">java <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E4%B8%89%E5%8F%89%E6%A0%91-ref">三叉树 <span>3</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%A4%84%E7%90%86-ref">字符串处理 <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%90%9C%E7%B4%A2-ref">搜索 <span>3</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%AE%97%E6%B3%95-ref">算法 <span>10</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E9%AB%98%E6%95%88-ref">高效 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>第一天</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>第一天 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>今天是大三的第一天正式上课。
+两堂课，共计5节。一个是《算法分析与设计》一个是《计算机图形学》
+都比较轻松，主要是课程是入门型的，所以问题不大，基本上就可以打酱油的过去~
+中午又一次见到了<a href="http://twitter.com/bhuztez">@bhuztez</a>,一起吃了饭，聊了很多东西。
+包括操蛋的电x的闪讯，技术，python，android，gnome 3，gtk，qt,opengl等等。
+哦，下午有个小插曲，就是淘宝给我送来了口碑卡，囧，绑定了一下，有空可以去玩玩看。
+然后就是肖磊的测光卡到了，我弄个一个过来，挺好的。现在玩胶片可以用用。
+晚上回到寝室，先是把自己电脑的Spaces开启了，然后设定了4个工作区，加上我本来就是双屏，就直接变成了8桌面。。。
+然后把工作分工了一下，一个桌面一个任务，专注的做，果然效率有所提升（当然也可能是我的心理作用）
+之后，试了试opengl，今天很搞笑，中午的时候还和bh聊天说用opengl在android上做点什么，下午的图形学居然就是讲opengl。
+当然，下午讲的那个档次就比较那个啥了。。。不过没是，回来还是在xcode里面跑了跑书上的范例，恩，mac内置了opengl还是很赞的，什么都不用设置，直接写好代码跑就好。果然是M$无法比的，哈哈哈。接着把随书附带的代码范例都拷贝到了电脑里面，恩，可以玩玩，没问题的。
+————————————————————————————————————————
+完成了opengl的helloworld，我选择折腾一个很折腾的事情，就是换虚拟机，过程乱七八糟的艰辛，结果是一塌糊涂的失望，囧。略过不提。
+这里可以附上在mac下安装qemu的方法，反正我是都成功了，只是速度不尽人意，估计是没有kqemu优化的关系，因为mac不支持。
+安装很简单，shell里面port一下就搞定了。
+<code><span style="color: #339966;">$ sudo port install qemu</span> </code>
+然后是创建虚拟硬盘
+<code><span style="color: #339966;">$ qemu-img create -f qcow windows.img 10G</span></code>
+接着是从镜像安装windows
+<code><span style="color: #339966;">$ qemu -localtime -cdrom xp.iso -m 1024 -boot d windows.img</span></code>
+万事搞定，安装完毕就可以玩xp了，启动这个虚拟机也相当容易，就一句话
+<code><span style="color: #339966;">$ qemu -hda windows.img</span></code>
+导出了军训的片，发给肖同学了，这样今天的事情应该都搞定了。
+洗个澡，把课表导入到google calendar里面，准备开始正常的大学上课生涯~
+晚安，地球的人们~</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/fun-c-language-recursive-main-function-is-to-print-the-word-hello" title="趣味：c语言递归main函数打印hello字样">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e681a9efbc8ce69c80e5908ee79a84e5869be8aeade78987" title="恩，最后的军训片">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-09-20</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E5%BF%83%E6%83%85%E6%97%A5%E5%BF%97-ref">心情日志 <span>276</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#life-ref">life <span>299</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%8A%80%E6%9C%AF-ref">技术 <span>6</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%94%9F%E6%B4%BB-ref">生活 <span>230</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E8%BD%AC%E6%8A%98-ref">转折 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E8%BF%9B%E6%AD%A5-ref">进步 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>mac os x 10.6.2下编译64位firefox</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>mac os x 10.6.2下编译64位firefox </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <pre><code>首先，编译的版本是3.7。然后看到了火狐很光明的未来，网上只有英文的教程，所以我就打算写一下自己的编译过程，算是当一个中文教程。喜欢折腾的朋友可以试试.
+</code></pre>
+
+<p>好了，废话不多，先开始讲吧。因为上次编译的时候忘记截图了，所以暂时就没图了，下回记得就补上吧。
+   首先，我们要确定你的电脑里面装了xcode的套件，如果你不知道这个是什么的话。你就把你安装系统的那张Mac OS X Install DVD塞进去，会看到一个叫做 &ldquo;Optional Installs&rdquo; 的文件夹的，里面就有xcode，把能装的都装上就成了。不过，记得使用最新的雪豹的光盘，里面的xcode才支持64位编译。或者也可以去<a href="http://developer.apple.com/technology/xcode.html">http://developer.apple.com/technology/xcode.html</a>这边下载最新的xcode，免费的。
+   第二个必须的东西是macports，这里有得下载<a href="http://www.macports.org/install.php">http://www.macports.org/install.php</a>下载了打开镜像双击安装即可。
+   装好了xcode和macports，我们就要开工了～
+   打开终端（别告诉我你不知道终端是什么，去 应用程序－》实用程序－》终端 打开），然后输入以下命令
+   <code>sudo port selfupdate
+</code>
+   然后你会看到一坨东西在不断刷屏，没事，这个是macports的自我更新，macports是一个很棒的开源软件管理器，它可以帮你从网上同步下来最新的代码。不过这次我们用它是下另外的一个管理器。
+   当完成这条命令后，你需要输入
+  <code>sudo port sync</code>
+  于是就再稍等片刻，等macports同步完成。
+  现在macports已经是最新的状态了，下面就可以用macports安装编译火狐的一些必要的组件
+  还是命令
+   <code>sudo port install mercurial libidl autoconf213
+</code>
+  这个会比较久，我记得我去吃了一碗面条回来才完成的。。。等这个命令完成了，真正的下载firefox的源码才刚刚开始。
+  等它完成后，关掉终端，然后重新打开（刷新一下罢了，不是必要步骤）
+  然后输入<code>hg version</code>
+ 如果它显示了
+ <code>分布式软件配置管理工具 - 水银 (版本 1.4.1)</p>
+
+<p>版权所有 &copy; 2005-2009 Matt Mackall <a href="mailto:mpm@selenic.com">mpm@selenic.com</a> 和其他人。
+这是自由软件，具体参见版权条款。这里没有任何担保，甚至没有适合
+特定目的的隐含的担保。
+</code>恭喜你，你马上可以开始下载代码了
+否则的话，你需要检查一下你的配置。不过一般都是成功的
+ 下载代码之前，你需要去那个以你用户名命名的文件夹下面新建一个文本文件，就叫做temp.txt吧，然后在里面输入
+<code>. $topsrcdir/browser/config/mozconfig
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-ff-dbg
+mk_add_options MOZ_MAKE_FLAGS=&ldquo;-s -j4&rdquo;
+ac_add_options &ndash;enable-debug
+ac_add_options &ndash;disable-optimize
+ac_add_options &ndash;with-macos-sdk=/Developer/SDKs/MacOSX10.6.sdk
+</code>
+保存
+之后再打开一个新的终端
+输入
+<code>mv temp.txt .mozconfig</code>
+这样你就完成了所有的配置。
+下面是激动人心的一步，下载，输入命令
+<code>hg clone <a href="http://hg.mozilla.org/mozilla-central/">http://hg.mozilla.org/mozilla-central/</a> mozilla
+</code>
+如果中间有选项让你选一路回车即可，这个时间也比较长，看你网速而定。半小时左右吧。
+当提示符再次出现的时候，说明代码下载完毕了！之后就是伟大的编译过程
+切换到代码的目录
+<code>cd mozilla</code>
+编译！
+<code>make -f client.mk build
+</code>
+之后你的cpu会占用100%然后温度不断上升。。。这时候就开始编译了，看你性能而定吧。
+等到编译完成后，你就可以去你用户名命名的文件夹下面看看，应该有一个mozilla的文件夹
+然后打开mozilla/obj-ff-dbg/dist/
+里面有一个MinefieldDebug.app
+图标是个地雷(因为是Debug模式，你用release模式就会出现正常的小狐狸了^o^)
+打开就是你编译出来的火狐了！
+enjoy it～</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e5a5bde6ad8ce68ea8e88d90efbc8ce3808ae98197e5bf98e3808be28094e28094e69bb9e58d89e5a89f" title="好歌推荐，《遗忘》——曹卉娟">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e68991e69c94" title="扑朔">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-01-08</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#10.6-ref">10.6 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#64-bit-ref">64 bit <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#64%E4%BD%8D-ref">64位 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#build-ref">build <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#firefox-ref">firefox <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#hg-ref">hg <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#mac-ref">mac <span>11</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#snow-leopard-ref">snow leopard <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BC%96%E8%AF%91-ref">编译 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

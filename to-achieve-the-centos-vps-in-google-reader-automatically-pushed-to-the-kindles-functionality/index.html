@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>CentOS 上实现 Google Reader 自动推送到 Kindle 的功能</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>CentOS 上实现 Google Reader 自动推送到 Kindle 的功能 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>&nbsp;</p>
+
+<p>首先，如果你嫌麻烦而且没有VPS而且对推送的内容不需要包含图片的话，那么你可以直接去下面这个网站：</p>
+
+<p><a href="http://reader.dogear.mobi/">http://reader.dogear.mobi/</a></p>
+
+<p>直接用你的Google帐户登陆就好，一步搞定，不过推送过来的东西没有图片，所以很不爽。那么就按照我的步骤来一步步完成这个事情吧。</p>
+
+<p>首先我们需要做一个准备工作，因为CentOS上面的Python是2.4的很多库都木有，然后呢一个个去装又比较麻烦，所以我就直接升级了CentOS上面的Python到2.7.1,步骤很简单，登陆到VPS的SSH后步骤如下：
+<p>
+<strong>1.从官网下载Python 2.7</strong>
+<pre lang='bash'> wget <a href="http://www.python.org/ftp/python/2.7.1/Python-2.7.1.tar.bz2">http://www.python.org/ftp/python/2.7.1/Python-2.7.1.tar.bz2</a> </pre>
+<strong>2.安装</strong>
+<pre lang='bash'># tar -jxvf Python-2.7.1.tar.bz2
+ cd Python-2.7.1
+ ./configure （如不指定 &ndash;prefix，默认安装在/usr/local/lib/python2.7）
+ make &amp;&amp; make install</pre>
+<strong>3.设定默认版本</strong>
+<pre lang='bash'> mv /usr/bin/python /usr/bin/python24
+ ln -s /usr/local/bin/python2.7 /usr/bin/python </pre>
+</p>
+好的，这里开始你的VPS上面的Python就是2.7.1的了，下面就开始我们的正题咯～首先我们要准备的东西如下：</p>
+
+<p><strong>1.kindlereader</strong></p>
+
+<p><a href="https://github.com/jiedan/kindlereader">https://github.com/jiedan/kindlereader</a></p>
+
+<p>这个是用来抓取Google Reader的一个小程序，Python写的，git管理，可以直接在VPS上用命令：</p>
+
+<pre lang='bash'> git clone https://github.com/jiedan/kindlereader.git</pre>
+
+<p>但是由于后面有些东西要修改而且还要添加一些内容，所以推荐在本地先同步下来测试好在和后面的文件一并打包上传到vps里面。同步下来的文件这些是有用的：</p>
+
+<p><em>kindlereader.py 、lib(文件夹)、feed2mobi.py、config.ini（同步下来是config.sample.ini，改名为config.ini)</em></p>
+
+<p>把上述文件放到一个文件夹里面。</p>
+
+<p><strong>2.Kindle Publishing Programs</strong></p>
+
+<p>下载地址：<a href="http://www.amazon.com/gp/feature.html?ie=UTF8&amp;docId=1000234621">http://www.amazon.com/gp/feature.html?ie=UTF8&amp;docId=1000234621</a></p>
+
+<p>这个是用来生成图文并茂的kindle的mobi文件用的，必须包含，因为要跑在CentOS上面，所以选择Linux版本下载下来，并且把压缩包里面的kindlegen这个文件放到刚git 获取下来的 kindlereader 文件夹里面（注意，需要和kindlereader.py同目录）</p>
+
+<p>到这里，准备工作就好了，下面开始配置工作。</p>
+
+<p>配置工作非常简单，主要就是修改<em>config.ini</em>文件，里面都有中文的注释也不用多讲，我这里就贴官方的sample了～：
+<pre lang='python'>[general]
+; 是否自动退出, 1 要， 0 否， 计划任务一般都要自动退出
+auto_exit = 0</p>
+
+<p>; 输出格式，支持 epub 和 mobi，默认为 mobi
+; TODO:epub计划中还不支持
+output_format = mobi</p>
+
+<p>; 输出 kindle格式的类型： book 或 periodical
+kindle_format = book</p>
+
+<p>[reader]
+; google reader 用户名
+username = yourname@gmail.com</p>
+
+<p>; google reader 密码，可以不写提示时再输入
+password =</p>
+
+<p>; 需要抓取的分类，此项优先于 skip_categories， 仅当此项为空时 skip_categories 设置有效
+select_categories =</p>
+
+<p>; 跳过分类，用英文逗号隔开, 例如：label1,label2
+skip_categories =</p>
+
+<p>; 是否要标记为已读： 1 标记， 0 不标记
+mark_read = 0</p>
+
+<p>; 每个feed中最多抓取条目
+max_items_number = 20</p>
+
+<p>; 排除已读 1 是 0 否， 如果设置为是则为只加载未读条目，反之亦然
+exclude_read = 1</p>
+
+<p>; 每篇文章最多下载图片数数目， -1 为不限， 图片太多可能需要时间很长并且造成mobi过大无法发送
+; 如果下载图片需要kindlegen支持，请确保kindlereader.exe所在目录中包含kindlegen.exe
+max_image_per_article = 5</p>
+
+<p>; 邮件发送设置
+[mail]</p>
+
+<p>; 是否发送邮件，如果不发送可以直接拷贝 /data/ 中相应文件到kindle： 1 发送， 0 不发送
+; 下载图片一般mobi会很大，建议不要发送邮件了，直接到/data目录拷贝mobi文件至kindle
+mail_enable = 0</p>
+
+<p>; 发件人，请使用亚马逊注册邮箱，或你的&rdquo;Your Kindle&rsquo;s approved email list&rdquo;中的其他邮箱
+from = youremail</p>
+
+<p>; 亚马逊提供的投递邮箱地址，注意 @free.kindle.com只能投递到wifi， @kindle.com可以投递到3G但要收费，也可以填写一个其他邮箱地址，由该邮箱转发到你的kindle邮箱地址
+to = &ldquo;name&rdquo;@free.kindle.com</p>
+
+<p>; smtp服务器地址可以使用gmail的smtp服务器
+host = smtp.gmail.com</p>
+
+<p>; smtp服务器端口, 不加密一般为 25, 加密一般为 465
+port = 465</p>
+
+<p>; smtp服务器是否需要 ssl： 1 需要， 0 不需要， 请根据你使用的smtp实际情况选择
+ssl = 1</p>
+
+<p>; smtp服务器需要认证时请填写下面两项，任何一项不填写则认为你的smtp服务器不需要认证
+username =
+password =
+</pre>
+这里还有一个小小的修改，因为我们是在vps上面做计划任务，所以不管程序执行结果如何我们都是希望程序自动退出的，这样就不需要人工干预了。所以，对于<em>kindlereader.py</em>这个程序，我们还需要修改一点点代码。</p>
+
+<p>第731～737行原来是这样的
+<pre lang='python'>
+    try:
+        if self.config.get(section, name).strip() in [&lsquo;1&rsquo;, 1]:
+            auto_exit = True
+        else:
+            auto_exit = False
+    except:
+        auto_exit = False
+</pre>
+修改为
+<pre lang='python'>
+    try:
+        if self.config.get(section, name).strip() in [&lsquo;1&rsquo;, 1]:
+            auto_exit = True
+        else:
+            auto_exit = True
+    except:
+        auto_exit = True
+</pre>
+好了，到此我们就完全配置好了，之后就是把所有文件上传到服务器某个目录下面，比如/home/kindle/这个目录</p>
+
+<p>然后写这样一个脚本文件：
+<pre lang='bash'>
+#!/bin/sh
+cd /home/kindle/
+python kindlereader.py
+</pre>
+保存为start.sh 赋予执行权限
+<pre lang='bash'> chmod a+u start.sh</pre>
+然后修改cron任务，执行
+<pre lang='bash'> crontab -e</pre>
+添加这么两行
+<em>30 7 * * * sh /home/kindle/start.sh
+30 23 * * 0 rm -r /home/kindle/data/</em>
+第一条的意思是每天7点半给我推送，第二条是每周日23点30分删除掉之前的所有data（这个文件夹里面放的都是这周产生的缓存文件)
+至此一切完美，睡觉去吧。。。然后第二天早上你的kindle里面就有推送过来的东西咯～</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/photo-sketch-three" title="摄影.小品三张">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/recovered" title="病愈杂谈">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2011-07-11</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#centos-ref">centos <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#Google-Reader-ref">Google Reader <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#kindle-ref">kindle <span>4</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#Kindlereader-ref">Kindlereader <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#python-ref">python <span>3</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#vps-ref">vps <span>3</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

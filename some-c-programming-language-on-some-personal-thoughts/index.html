@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>关于一些C语言编程的一些个人想法</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>关于一些C语言编程的一些个人想法 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>首先么，这是个人风格，完全不是权威之说。
+第二，记录下来只是感觉自己这样蛮舒服，分享而已。
+第三，别拿某为谭姓叫兽的文章来说事情，不解释。
+第四，这里的 C 语言不是狭义的指 C 这门语言，也包括 C++，object-c，甚至 Java 等类似与 C语法的语言
+────────────────────────────────
+好了，下面进入正文。比较琐碎，所以就想到什么讲什么了。
+先说说一个判断 0 的问题吧，或者称为判断空值。一般空值常规的来思考分那么几种，NULL，0，0.0 以及 false（可能还有别的，但是常规就这些了，所以就讲这些）。那么这些分别有什么区别呢？
+首先说说，写判 0 的风格是为了什么，因为 C 语言可以直接用这么一句话来表示几乎所有的空值
+<code>if(!a){}</code>
+那么，我要把判 0 的语句分开写，就是为了区别变量的类型，方便阅读代码
+倒过来讲，先解释 false 的变量，一般这个变量都是布尔型的变量，那么这个变量就两个值，真或者假。所以我一般选择上面那种
+<code>if(!a){}</code>
+的方式来表示这个变量为假的时候执行什么。理由吧，个人偏好，也有一点认为，!作为一个逻辑运算符，而布尔是逻辑变量，所以凑在一起刚刚好。
+然后是 0.0，这一般指 float 或者 double 的变量，这种变量的一个特点就是不精确。如果你直接用
+<code> if(a==0.0){}</code>
+之类的方法来表述，可能会出现不可意料的问题。所以这里我也选择一种比较流行的处理方法，就是让一个实型变量和一个极小的误差值 EPS 做比较。比如如下代码：
+<code>
+#define EPS 1e-9
+if(fabs(a-0.0)<EPS)
+{}
+</code>
+就是这种方式，对于一个实型变量，最好把相等的比较转化成为大于小于的比较，原因么，不赘述了，学过组成原理就知道了。
+整数变量不多说，最常规的方法
+<code>
+if(a==0)
+{}
+</code>
+然后是指针一类的，空值为 NULL 的，大家都知道 NULL 就是 0，但是书写的时候，还是最好把 NULL 写上了，这样可读性大大的增加。例：
+<code>
+if(a==NULL)
+{}
+</code>
+判断0的问题大约就想到那么一些，然后说说几个小点。
+第一个是一个规范问题，一般很多人都喜欢把函数声明和实现都放在一起。特别是类的成员函数，别的函数也一样。其实这个习惯不是很好，C语言也好，C++ 也好，都分为 .h 和 .c(.cpp) 两种文件，一般 .h 文件里面放声明，.c 文件里面放实现，包括成员函数。这个主要是方便别的利用你代码的人方便，不需要繁杂的翻看你的整个实现，只要看 .h 文件就可以对你的函数如何使用一目了然。
+第二个是一个小细节，就是 void 参数的使用，这里说的不是
+<code>
+void main()
+</code>
+个人是很反对这种写法的，因为 main() 函数作为系统直接调用的函数，你如果不返回一个值给系统，系统怎么知道你的程序是正常还是不正常的结束的？个人感觉，我很反感用 void 来声明 main() 函数。
+那么，这里的 void 指什么呢？就是指没有参数表的函数，希望在函数的参数表里面填写一个 void <del datetime="2010-12-25T06:58:19+00:00">原因吧，难说，这样写的确我说不上特别的好处，但是感觉会舒服很多，可能就是一个个人偏好吧。</del>，原因是，加了void后，这个函数就被限制成为不能传入任何参数的函数了，如果你强行传入参数，编译会失败。如果不加在 C语言会认为这个函数可以传入任何参数的函数，区别还是很大的。（感谢蔡大牛提醒）。
+<code>
+int GetOne(void)
+{
+    return 1;
+}
+</code>
+第三点 就是解释一下 char* strcpy(char<em>,char</em>); 这个函数的返回值，然后抛砖引玉的来说说返回值的重要性。这里也许有些朋友会费解，明明 strcpy 的返回值已经给了第一个参数了，为什么还要最后 return 回来？这个不是“脱了裤子放屁──多此一举”么。其实不然，我们看如下代码就明白为什么了。
+<code>
+int length =strlen (strcpy(str,&ldquo;zerob13&rdquo;));
+</code>
+这个返回值就是为了这样的灵活性而考虑设计的，所以设计一个好的返回值对于一个好的函数也是非常重要的。
+第四点，也是介绍一个神气的东西，叫做空循环。也许很多人学了c语言后一直不理解，为什么还要有个 do-while 循环，感觉有 while 不是已经够了么，这个东西似乎有点多此一举，其实不然。大家都知道，C语言是为了系统而出现的语言，这个 do-while 也自然和这个挂钩了。比如，你总是能够在 linux 的内核里面看到类似如下的宏。
+<code>
+#define DUMP_WRITE(addr,nr) do{memcpy(bufp,addr,nr);bufp+=nr;}while(0)
+</code>
+总所周知，do-while 是先执行后判断循环，这里的while(0)也就是这个代码等价于：
+<code>
+#define DUMP_WRITE(addr,nr)  memcpy(bufp,addr,nr);bufp+=nr;
+</code>
+那么，我们为什么要套上这么一个 do-while 空循环呢？显然不行，一个小例子就可以说明，比如这个
+<code>
+if(OK)
+  DUMP_WRITE(addr,nr);
+else
+ break;
+</code>
+如果，没有空循环，代码会变成这样子。
+<code>
+if(OK)
+ memcpy(bufp,addr,nr);
+ bufp+=nr;;
+else
+ break;
+</code>
+然后，就悲剧了。但是，当你加上了 do-while 空循环的时候，整个循环被当作单独的一句语句，这样就可以达到正确的效果，如下：
+<code>
+if(OK)
+do{
+ memcpy(bufp,addr,nr);
+ bufp+=nr;
+}while(0);
+else
+ break;
+</code></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/the-remaining-section-of-the-magic-egg" title="神奇的剩蛋节">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/winter-solstice" title="冬至">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-12-25</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#C%23-ref">C# <span>8</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#code-ref">code <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#NULL-ref">NULL <span>11</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#photo-ref">photo <span>163</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%BF%83%E5%BE%97-ref">心得 <span>4</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%84%9F%E6%82%9F-ref">感悟 <span>52</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BC%96%E7%A8%8B-ref">编程 <span>31</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E9%A3%8E%E6%A0%BC-ref">风格 <span>2</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Unix/Linux实用小工具-bc命令</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>Unix/Linux实用小工具-bc命令 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p style="padding-left: 30px;">很多时候用电脑的时候需要用一下简单的四则运算，windows用户多半会打开m$提供的那个傻乎乎的计算器吧。你不觉得在那个计算器里面输入太麻烦了么？如果你很幸运的是Unix或者Linux用户的话，恭喜你，当你有计算简单四则运算的时候可以打开一个终端调用一个很神奇的命令</p>
+
+<p><h2 style="text-align: center;"><span style="color: #ff0000;">bc</span></h2>
+先让我们看看bc的用法：
+<a href="http://www.zerob13.in/wp-content/uploads/2010/02/screen-capture-2.jpg"><img src="http://www.zerob13.in/wp-content/uploads/2010/02/screen-capture-2-300x262.jpg" alt="" title="screen-capture-2" width="300" height="262" class="alignnone size-medium wp-image-617" /></a>
+可以看到，一般的运算直接输入就好了，一个表达式一个结果
+<a href="http://www.zerob13.in/wp-content/uploads/2010/02/screen-capture-2.jpg"><img src="http://www.zerob13.in/wp-content/uploads/2010/02/screen-capture-2-300x262.jpg" alt="" title="screen-capture-2" width="300" height="262" class="alignnone size-medium wp-image-617" /></a>
+神奇的地方是这里，bc可以用变量来计算，这个是M$的计算器所没有的。
+无论什么运算，算完了输入quit退出bc计算器即可～
+ps:其实bc还可以加 参数运行
+-h 是帮助
+-i 是交谈模式，这个基本上没什么变化的，我也还没研究出来究竟干什么的。。。汗。。。
+-l 这个参数比较常用，加了后就不会对结果取整了，如图
+<a href="http://www.zerob13.in/wp-content/uploads/2010/02/screen-capture.jpg"><img src="http://www.zerob13.in/wp-content/uploads/2010/02/screen-capture-300x262.jpg" alt="" title="screen-capture" width="300" height="262" class="alignnone size-medium wp-image-619" /></a>
+加了 -l的sqrt(2)和不加的sqrt(2)是不同的结果
+-v 版本显示，没什么用的。。。忽略吧</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e59b9ee88081e5aeb6e8bf87e5b9b4e79a84e8afb4" title="回老家过年的说">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/javae58699e79a84e5889be6848fe697b6e9929fefbc8ce7baafe5b19ee5a5bde78ea9efbc8ce6b2a1e4bbbbe4bd95e5ae9ee794a8e4bbb7e580bce79a84e8afb4" title="Java写的创意时钟，纯属好玩，没任何实用价值的说～">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-02-12</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#bc-ref">bc <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#linux-ref">linux <span>5</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#shell-ref">shell <span>4</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#unix-ref">unix <span>3</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%91%BD%E4%BB%A4-ref">命令 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%AE%9E%E7%94%A8-ref">实用 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E8%AE%A1%E7%AE%97%E5%99%A8-ref">计算器 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

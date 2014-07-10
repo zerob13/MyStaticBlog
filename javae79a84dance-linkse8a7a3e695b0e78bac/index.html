@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>java的dance links解数独</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>java的dance links解数独 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>前几天看到有人在ndsl上面玩数独，我对这个游戏算是一窍不通了。。。每次都玩不出。。。记得早些时候还在训练的时候，我们学过一个算法叫做dance links，当时一直不理解，于是直接拿了小丽的代码过来，这次又把那个代码打成了java版本，这里理解算是上了一个档次，呵呵，可惜我已经不再战斗～
+ 数独的解法里面dance links算是最高效的一种了，基本上有解的数独都可以在1s之内解出来吧，明后天我打算试试把这个包装成可视化的程序，写个解数独快手，然后就可以去MM面前耍帅了～哈哈哈（邪恶的笑）
+<pre lang="java"></p>
+
+<p>package com.zerob13.Sudoku;
+import java.util.*;
+/**
+ * @author yanglingfeng
+ *
+ */
+class node{
+    public int x,y,l,r,u,d;
+    public int sum;
+    public int f;
+    public  char now;
+   public node(){
+        x=0;
+        y=0;
+        l=0;
+        r=0;
+        u=0;
+        d=0;
+        sum=0;
+        f=0;
+        now=0;
+    }
+}
+public class Sudoku {
+    private int n,m;
+    private int cnt;
+    private char[][] map;
+    private int x;
+    private int y;
+    private char nn;
+    node[] p;
+    public Sudoku(){
+         n=9*9*9+1;
+         m=9*9*4+1;
+         int i,j,k;
+         boolean[][] row,col,cube;
+         row=new boolean[9][19];
+         col=new boolean[9][19];
+         cube=new boolean[9][19];<br />
+        map=new char[29][29];
+        Scanner read=new Scanner(System.in);
+            String a;
+            int L=0;
+            for(i=0;i&lt;9;i++){
+                a=read.nextLine();
+                L=0;
+                for(j=0;j&lt;a.length();j++)
+                {
+                    if(a.charAt(j)!=&rsquo; &lsquo;)
+                    map[i][L++]=a.charAt(j);
+                }
+            }
+             for(i=0;i&lt;9;i++)
+                {
+                    for(j=0;j&lt;9;j++)
+                    {
+                        if(map[i][j]!=&lsquo;?&rsquo;)
+                        {
+                            row[i][map[i][j] - &lsquo;1&rsquo;] = true;
+                            col[j][map[i][j] - &lsquo;1&rsquo;] = true;
+                            cube[i / 3 * 3 + j / 3][map[i][j] - &lsquo;1&rsquo;] = true;
+                        }
+                    }
+                }
+                p=new node[n*m];
+                for(i=0;i&lt;n*m;i++)
+                {
+                    p[i]=new node();
+                }
+                p[0].l=324;
+                p[0].r=1;
+                for(i=1;i&lt;325;i++)
+                {
+                    p[i].l=i-1;
+                    p[i].r=i+1;
+                    p[i].sum=0;
+                    p[i].u=p[i].d=i;</p>
+
+<pre><code>            }
+            p[324].r=0;
+            cnt=325;
+            for(i=0;i&lt;9;i++)
+            {
+                for(j=0;j&lt;9;j++)
+                {
+                    if(map[i][j]!='?')
+                    {
+
+                        delnode(i * 9 + j + 1);
+                        int tx = map[i][j] - '1';
+                        delnode(81 + (i + 1) + 9 * tx);
+                        delnode(162 + (j + 1) + 9 * tx);
+                        delnode(243 + (i / 3 * 3+ j / 3 + 1)+ 9 * tx );
+                    }else
+                    {
+                        nn='1';
+                        x=i;
+                        y=j;
+                        for(k=0;k&lt;9;k++,nn++)
+                        {
+                            if (row[i][k]||col[j][k]||cube[i / 3 * 3 + j / 3][k])
+                                continue;
+                            int cnum = cnt;
+                            addnode(i * 9 + j + 1);
+                            addnode(81 + (i + 1) + 9 * k);
+                            addnode(162 + (j + 1) + 9 * k);
+                            addnode(243 + (i / 3 * 3+ j / 3 + 1)+9 * k );
+                            p[cnum].l = cnt - 1;
+                            p[cnt - 1].r = cnum;
+
+                        }
+                    }
+
+                }
+            }
+            dfs(0);
+
+}
+void addnode(int fa){
+    p[cnt].x=x;
+    p[cnt].y=y;
+    p[cnt].f=fa;
+    p[cnt].now=nn;
+    p[cnt].u=p[fa].u;
+    p[cnt].d=fa;
+    p[fa].sum++;
+    p[p[fa].u].d=cnt;
+    p[fa].u=cnt;
+    p[cnt].l=cnt-1;
+    p[cnt].r=cnt+1;
+    cnt++;
+    return ; 
+}
+void delnode(int c)
+{
+    p[p[c].l].r=p[c].r;
+    p[p[c].r].l=p[c].l;
+}
+
+
+void remove(int c)
+{
+
+    p[p[c].l].r=p[c].r;
+    p[p[c].r].l=p[c].l;
+    int i,j;
+    for(i=p[c].d;i!=c;i=p[i].d)
+    {
+        for(j=p[i].r;j!=i;j=p[j].r)
+        {
+
+            p[p[j].f].sum--;
+            p[p[j].u].d=p[j].d;
+            p[p[j].d].u=p[j].u;
+
+        }
+    }
+
+}
+void resume(int c)
+{
+
+    int i,j;
+    for(i=p[c].u;i!=c;i=p[i].u)
+    {
+        for(j=p[i].l;j!=i;j=p[j].l)
+        {
+            p[p[j].f].sum++;
+            p[p[j].u].d=j;
+            p[p[j].d].u=j;
+
+        }
+    }
+    p[p[c].r].l=c;
+    p[p[c].l].r=c;
+}
+boolean dfs(int k)
+{
+
+    int i,j,minx=p[0].r;
+    if(p[0].r==0)
+    {
+
+        for(i=0;i&lt;9;i++)
+        {
+            for(j=0;j&lt;9;j++)
+            {
+                if(j!=0)
+                System.out.print(&quot; &quot;+map[i][j]);
+                else
+                     System.out.print(map[i][j]);
+            }
+         System.out.println();
+        }
+        return true;
+    }
+    for(i=p[0].r;i!=0;i=p[i].r)
+    {
+
+        if(p[i].sum&lt;p[minx].sum)
+            minx=i;
+    }
+    remove(minx);
+    for(i=p[minx].d;i!=minx;i=p[i].d)
+    {
+        map[p[i].x][p[i].y]=p[i].now;
+        for(j=p[i].r;j!=i;j=p[j].r)
+        {
+
+            remove(p[j].f);
+        }
+        if(dfs(k+1))
+        {
+            return true;
+        }
+        for(j=p[i].l;j!=i;j=p[j].l)
+        {
+            resume(p[j].f);
+        }
+    }
+    resume(minx);
+    return false;
+
+}
+</code></pre>
+
+<p>}</p>
+
+<p></pre>
+测试用的包含main的文件就不发了，没什么意义。。。
+即使是java下面运行，dance links还是非常迅速，基本上就是秒杀的。。。
+当然我承认，我的代码风格有些怪异，所以在格式还是有很多需要注意的地方的，或者说对封装还是有一定的理解偏差吧。</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/javae7bb83e4b9a0e4b98bne79a87e5908ee6b7b1e6909ce8a7a3" title="java练习之N皇后深搜解">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e8bf99e5b0b1e698afe88bb1e6a0bce585b0-this-is-england" title="这就是英格兰 This Is England">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2009-10-30</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#dancelinks-ref">dancelinks <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#java-ref">java <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#sudoku-ref">sudoku <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%95%B0%E7%8B%AC-ref">数独 <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BC%96%E7%A8%8B-ref">编程 <span>31</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E8%88%9E%E8%B9%88%E9%93%BE-ref">舞蹈链 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

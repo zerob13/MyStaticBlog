@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>聊聊我的Vim配置文件</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>聊聊我的Vim配置文件 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;程序员用的最多的编辑器莫过于 Vim 和 Emacs 了，由于我是习惯用 Vim 的一个人，也用了几年的 Vim 最近重新整理了自己的配置文件，加上了详细的注释，丢到了 <a href="https://github.com/zerob13/vimrc">GitHub</a> 上。主要支持的开发环境是 C/C++/JS/HTML/CSS/GO ,以及增加了 VIM-TODO 工具的支持</p>
+
+<h1><a style="display: block;" name="先丢效果图" href="#先丢效果图"></a>先丢效果图</h1>
+
+<p><img src="/content/images/2014/Mar/Screen_Shot_2014_03_31_at_9_40_09_PM.png" alt="c++模式" />
+</p>
+
+<h1><a style="display: block;" name="安装方法：" href="#安装方法："></a>安装方法：</h1>
+
+<pre><code>$ git clone https://github.com/zerob13/vimrc.git  ~/.vim
+$ git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+$ cp ~/.vim/.vimrc ~/.vimrc
+$ vim
+:BundleInstall
+</code></pre>
+
+<blockquote>
+<p>也可以直接访问 <a href="https://github.com/zerob13/vimrc">GitHub</a> 获取代码</p>
+</blockquote>
+
+<h1><a style="display: block;" name="我的vimrc如下:" href="#我的vimrc如下:"></a>我的Vimrc如下:</h1>
+
+<pre><code>&quot;关闭vi的一致性模式 避免以前版本的一些Bug和局限
+set nocompatible
+&quot;配置backspace键工作方式
+set backspace=indent,eol,start
+&quot;显示行号
+set number
+&quot;设置在编辑过程中右下角显示光标的行列信息
+set ruler
+&quot;在状态栏显示正在输入的命令
+set showcmd
+
+&quot;设置历史记录条数
+set history=1000
+
+&quot;设置取消备份 禁止临时文件生成
+set nobackup
+set noswapfile
+&quot;设置匹配模式 类似当输入一个左括号时会匹配相应的那个右括号
+set showmatch
+
+&quot;设置C/C++方式自动对齐
+set autoindent
+set cindent
+
+set hidden
+&quot;开启语法高亮功能
+syntax enable
+syntax on
+
+&quot;指定配色方案为256色
+&quot;set t_Co=256
+set background=dark
+colorscheme solarized
+
+&quot;设置搜索时忽略大小写
+set ignorecase
+
+&quot;设置在Vim中可以使用鼠标 防止在Linux终端下无法拷贝
+set mouse=a
+
+&quot;设置Tab宽度
+set tabstop=4
+&quot;设置自动对齐空格数
+set shiftwidth=4
+&quot;设置按退格键时可以一次删除4个空格
+set softtabstop=4
+&quot;设置按退格键时可以一次删除4个空格
+set smarttab
+&quot;将Tab键自动转换成空格 真正需要Tab键时使用[Ctrl + V + Tab]
+set expandtab
+
+&quot;设置编码方式
+set encoding=utf-8
+&quot;自动判断编码时 依次尝试一下编码
+set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+
+set autochdir
+set tags=tags;
+
+&quot;检测文件类型
+filetype off
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+&quot; My Plugins
+Bundle 'gmarik/vundle'
+Bundle 'Lokaltog/vim-powerline'
+&quot;Bundle 'scrooloose/nerdtree'
+Bundle 'majutsushi/tagbar'
+Bundle 'vim-scripts/a.vim'
+Bundle 'flazz/vim-colorschemes'
+&quot;Bundle 'jistr/vim-nerdtree-tabs'
+Bundle 'ervandew/supertab'
+Bundle 'zerob13/Conque-Shell'
+Bundle 'sjbach/lusty'
+Bundle 'cespare/vim-golang'
+Bundle 'Blackrush/vim-gocode'
+Bundle 'dgryski/vim-godef'
+Bundle 'vim-scripts/xml.vim'
+Bundle 'mattn/emmet-vim'
+Bundle 'terryma/vim-multiple-cursors'
+Bundle 'tpope/vim-commentary'
+Bundle 'kien/ctrlp.vim'
+Bundle 'vim-scripts/Mark'
+Bundle 'vim-scripts/vimtodo'
+
+set laststatus=2
+let g:Powline_symbols='fancy'
+let g:SuperTabDefaultCompletionType=&quot;context&quot;
+filetype plugin on
+filetype plugin indent on
+&quot; set transparency=10
+
+&quot;autocmd vimenter * NERDTree
+&quot;autocmd vimenter * if !argc() | NERDTree | endif
+&quot;autocmd bufenter * if (winnr(&quot;$&quot;) == 1 &amp;&amp; exists(&quot;b:NERDTreeType&quot;) &amp;&amp; b:NERDTreeType == &quot;primary&quot;) | q | endif
+colorscheme desert
+&quot; My nmaps
+nmap &lt;C-o&gt; :TagbarToggle&lt;CR&gt;
+nmap &lt;F8&gt; :LustyFilesystemExplorerFromHere&lt;CR&gt;
+map &lt;C-l&gt; :tabn&lt;cr&gt;             &quot;下一个tab
+map &lt;C-h&gt; :tabp&lt;cr&gt;             &quot;上一个tab
+map &lt;C-n&gt; :tabnew&lt;cr&gt;           &quot;新tab
+map &lt;C-k&gt; :bn&lt;cr&gt;               &quot;下一个文件
+map &lt;C-j&gt; :bp&lt;cr&gt;               &quot;上一个文件
+map &lt;F10&gt; :ConqueTermTab zsh&lt;cr&gt;
+
+&quot;设置html css补全
+&quot;let g:user_emmet_install_global = 0
+&quot;autocmd FileType html,css EmmetInstall
+
+set guifont=Monaco:h16
+&quot;自动格式化Go文件
+autocmd BufWritePre *.go :Fmt
+
+&quot;新建.c,.h,.sh,.java,py文件，自动插入文件头
+autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java,*.py exec &quot;:call SetTitle()&quot;
+&quot;&quot;定义函数SetTitle，自动插入文件头
+func SetTitle()
+    &quot;如果文件类型为.sh文件
+    if &amp;filetype == 'sh'
+        call setline(1,&quot;\#########################################################################&quot;)
+        call append(line(&quot;.&quot;), &quot;\# File Name: &quot;.expand(&quot;%&quot;))
+        call append(line(&quot;.&quot;)+1, &quot;\# Author: zerob13&quot;)
+        call append(line(&quot;.&quot;)+2, &quot;\# mail: zerob13@gmail.com&quot;)
+        call append(line(&quot;.&quot;)+3, &quot;\# Created Time: &quot;.strftime(&quot;%c&quot;))
+        call append(line(&quot;.&quot;)+4, &quot;\#########################################################################&quot;)
+        call append(line(&quot;.&quot;)+5, &quot;\#!/bin/bash&quot;)
+        call append(line(&quot;.&quot;)+6, &quot;&quot;)
+    elseif &amp;filetype == 'python'
+        call setline(1,&quot;\#!/usr/bin/env python&quot;)
+        call append(line(&quot;.&quot;),&quot;\#-*- coding: utf-8 -*- &quot;)
+        call append(line(&quot;.&quot;)+1,&quot;\#Author:  zerob13 &lt;zerob13@gmail.com&gt;&quot;)
+        call append(line(&quot;.&quot;)+2,&quot;&quot;)
+    else
+        call setline(1, &quot;/*************************************************************************&quot;)
+        call append(line(&quot;.&quot;), &quot;    &gt; File Name: &quot;.expand(&quot;%&quot;))
+        call append(line(&quot;.&quot;)+1, &quot;    &gt; Author: zerob13&quot;)
+        call append(line(&quot;.&quot;)+2, &quot;    &gt; Mail: zerob13@gmail.com &quot;)
+        call append(line(&quot;.&quot;)+3, &quot;    &gt; Created Time: &quot;.strftime(&quot;%c&quot;))
+        call append(line(&quot;.&quot;)+4, &quot; ************************************************************************/&quot;)
+        call append(line(&quot;.&quot;)+5, &quot;&quot;)
+    endif
+    if &amp;filetype == 'cpp'
+        call append(line(&quot;.&quot;)+6, &quot;#include&lt;iostream&gt;&quot;)
+        call append(line(&quot;.&quot;)+7, &quot;using namespace std;&quot;)
+        call append(line(&quot;.&quot;)+8, &quot;&quot;)
+    endif
+    if &amp;filetype == 'c'
+        call append(line(&quot;.&quot;)+6, &quot;#include&lt;stdio.h&gt;&quot;)
+        call append(line(&quot;.&quot;)+7, &quot;&quot;)
+    endif
+    &quot;新建文件后，自动定位到文件末尾
+    autocmd BufNewFile * normal G
+endfunc
+</code></pre>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/pa-xing-dong-wu" title="爬行动物">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/two-small-storys" title="两件小事">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2014-03-31</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#code-ref">code <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#geek-ref">geek <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#editor-ref">editor <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#vim-ref">vim <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#vimrc-ref">vimrc <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

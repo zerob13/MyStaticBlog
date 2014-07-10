@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bmp2Asc 所谓的短学期设计</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>Bmp2Asc 所谓的短学期设计 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p><h3><span style="color: #339966;">话说2个礼拜前在学校是做短学期，然后做完了就回家去了~恩，现在都结束了，在清理电脑的时候发现了这个代码~
+反正也没什么用了，贴一下留作纪念吧
+程序很简单，就是一个把bmp图片转化成asc字符画的程序~
+三个.c文件三个.h文件~
+其实这几个.h文件写的不是很好，如果写一下#ifdef的话应该会更加好
+先是bmp文件读写的.h文件和.c</span></h3>
+<pre lang="C">
+/*
+ *  bmpRW.h
+ *  bmp2ascii
+ *
+ *  Created by zerob13 on <sup>6</sup>&frasl;<sub>30</sub>/10.
+ *  Copyright 2010 <strong>MyCompanyName</strong>. All rights reserved.
+ *
+ <em>/
+#include<string.h>
+#include <stdio.h>
+#include<stdlib.h>
+int BmpRead(char</em>,unsigned char <em>,BITMAPINFOHEADER *);
+</pre>
+<pre lang="C">
+/</em>
+ *  bmpRW.cpp
+ *  bmp2ascii
+ *
+ *  Created by zerob13 on <sup>6</sup>&frasl;<sub>30</sub>/10.
+ *  Copyright 2010 <strong>MyCompanyName</strong>. All rights reserved.
+ *
+ */
+#include &ldquo;Typedef.h&rdquo;
+#include &ldquo;bmpRW.h&rdquo;</p>
+
+<p>int BmpRead(char* fp,unsigned char *pimage,BITMAPINFOHEADER *bb){</p>
+
+<pre><code>BITMAPFILEHEADER *bmpfh; //bmp文件头指针
+BITMAPINFOHEADER *bmpih; //bmp文件信息头指针
+unsigned char *data; //bmp文件数据指针
+int i=0;
+int IMAGE_SIZE;
+/*
+ bmp文件头读取
+ */
+FILE *file=fopen(fp,&quot;rb+&quot;);
+bmpfh=(BITMAPFILEHEADER*)malloc(sizeof(BITMAPFILEHEADER));
+if(!bmpfh)
+{
+    printf(&quot;Memory not enough!\n&quot;);
+    exit(1);
+}
+fseek(file,sizeof(short),SEEK_SET);
+fread(bmpfh,sizeof(BITMAPFILEHEADER),1,file);
+/*
+ bmp文件信息头读入
+ */
+bmpih=(BITMAPINFOHEADER*)malloc(sizeof(BITMAPINFOHEADER));
+if(!bmpih)
+{
+    printf(&quot;Memory not enough!\n&quot;);
+    exit(1);
+}
+fseek(file,sizeof(BITMAPFILEHEADER)+sizeof(short),SEEK_SET);
+fread(bmpih,sizeof(BITMAPINFOHEADER),1,file);
+/*
+ bmp文件数据读入
+ */
+IMAGE_SIZE=(bmpih-&gt;biSizeImage);
+data=(unsigned char*)calloc(IMAGE_SIZE,sizeof(char));
+if(!data)
+{
+    printf(&quot;Memory not enough!\n&quot;);
+    exit(1);
+}
+fseek(file,bmpfh-&gt;bfOffBits,SEEK_SET);   
+fread(data,IMAGE_SIZE,1,file);   
+fclose(file);   
+for(i=0;i&lt;IMAGE_SIZE;i++ )   
+{   
+    *(pimage+i)=*(data+i); 
+}   
+memcpy(bb,bmpih,sizeof(BITMAPINFOHEADER));
+free(data);
+free(bmpih);
+free(bmpfh);
+return IMAGE_SIZE;
+</code></pre>
+
+<p>}
+</pre>
+<h3><span style="color: #339966;">然后是转换的部分</span></h3>
+<pre lang="C">
+/*
+ *  buff2asc.h
+ *  bmp2ascii
+ *
+ *  Created by zerob13 on <sup>7</sup>&frasl;<sub>1</sub>/10.
+ *  Copyright 2010 <strong>MyCompanyName</strong>. All rights reserved.
+ *
+ */</p>
+
+<p>void buff2asc(int ,int ,int ,unsigned char *,char ansmap[][Max_W]);
+</pre>
+<pre lang="C">
+/*
+ *  buff2asc.c
+ *  转换ascii函数
+ *
+ *  Created by zerob13 on <sup>7</sup>&frasl;<sub>1</sub>/10.
+ *  Copyright 2010 <strong>MyCompanyName</strong>. All rights reserved.
+ *
+ */
+#include&rdquo;Typedef.h&rdquo;
+#include&rdquo;bmpRW.h&rdquo;
+#include &ldquo;buff2asc.h&rdquo;
+void buff2asc(int size,int h,int w,unsigned char *buffer,char ansmap[][Max_W]){
+    int i,j,k;
+    i=j=0;
+    for(k=0;k&lt;size;k+=3)
+    {</p>
+
+<pre><code>    if(buffer[k]!=255){
+        ansmap[i][j++]=' ';
+    }
+    else{
+        ansmap[i][j++]='@';
+
+    }
+    if(j==w)
+    {
+
+        while(k%4){     //bmp文件每行必须%4为0
+            k++;        //否则要用0x00补足
+        }               //故这里要通过这个去掉补足用的0x00
+        j=0;
+        i++;
+    }
+}
+return ;
+</code></pre>
+
+<p>}
+</pre>
+<h3><span style="color: #339966;">之后是比较重要的一个.h函数，定义了bmp文件的一些信息</span></h3>
+<pre lang="C">
+/*
+ *  Typedef.h
+ *  bmp2ascii
+ *  This file includes all types about bmp.
+ *  Created by zerob13 on <sup>6</sup>&frasl;<sub>30</sub>/10.
+ *  Copyright 2010 <strong>MyCompanyName</strong>. All rights reserved.
+ *
+ */</p>
+
+<p>typedef short WORD;
+typedef int DWORD;
+typedef unsigned int LONG;
+typedef char BYTE;
+#define Max_W 800
+#define Max_H 800
+/*
+ <em>位图文件头
+ *
+ */
+typedef struct tagBITMAPFILEHEADER {
+    //WORD    bfType;
+    DWORD   bfSize;
+    WORD    bfReserved1;
+    WORD    bfReserved2;
+    DWORD   bfOffBits;
+} BITMAPFILEHEADER;
+/</em>
+ <em>位图信息头
+ *
+ */
+typedef struct tagBITMAPINFOHEADER{
+    DWORD  biSize;
+    LONG   biWidth;
+    LONG   biHeight;
+    WORD   biPlanes;
+    WORD   biBitCount;
+    DWORD  biCompression;
+    DWORD  biSizeImage;
+    LONG   biXPelsPerMeter;
+    LONG   biYPelsPerMeter;
+    DWORD  biClrUsed;
+    DWORD  biClrImportant;
+} BITMAPINFOHEADER;
+/</em>
+ *颜色表
+ */
+typedef struct tagRGBQUAD {
+    BYTE    rgbBlue;
+    BYTE    rgbGreen;
+    BYTE    rgbRed;
+    BYTE    rgbReserved;
+} RGBQUAD;</p>
+
+<p>/*
+ *位图信息
+ *
+ */
+typedef struct tagBITMAPINFO {
+    BITMAPINFOHEADER    bmiHeader;
+    RGBQUAD              bmiColors[1];
+} BITMAPINFO;</p>
+
+<p></pre>
+<h3><span style="color: #339966;">最后是主函数~</span></h3>
+<pre lang="C">
+/*
+ *  main.c
+ *  主函数部分
+ *
+ *  Created by zerob13 on <sup>7</sup>&frasl;<sub>1</sub>/10.
+ *  Copyright 2010 <strong>MyCompanyName</strong>. All rights reserved.
+ *
+ */
+//头文件部分
+#include&rdquo;Typedef.h&rdquo;//bmp文件类型的头文件
+#include&rdquo;bmpRW.h&rdquo;//bmp文件读写头文件
+#include&rdquo;buff2asc.h&rdquo;//转换为ascii的头文件</p>
+
+<p>int main (int argc, char * const argv[]) {</p>
+
+<pre><code>unsigned char *buffer;//缓冲区，用于储存图片色彩矩阵
+int size;//图片大小
+BITMAPINFOHEADER *bmpih;//图片信息头，用于获取图片分辨率
+int w,h;//图片分辨率
+char fp[2048],fp2[2048];//输入文件，输出文件的地址
+char ansmap[Max_H][Max_W];//输出ascii矩阵
+int i,j;
+FILE *out;//输出文件指针
+//获取空间
+buffer=(unsigned char*)malloc(3*Max_W*Max_H);
+bmpih=(BITMAPINFOHEADER*)malloc(sizeof(BITMAPINFOHEADER));
+//判断工作模式，图片地址是否已经从参数中输入
+if(argc==1){
+    printf(&quot;please input your file:)\n&quot;);
+    scanf(&quot;%s&quot;,fp);
+
+}else{
+    if(argc==2)
+    {
+        strcpy(fp,argv[1]);
+    }else{
+        printf(&quot;Error\n&quot;);
+        exit(1);
+    }
+}
+//生成输出文件
+strcpy(fp2,fp);
+strcat(fp2,&quot;-answer.txt&quot;);
+out=fopen(fp2,&quot;w+&quot;);
+//读入数据
+size=BmpRead(fp,buffer,bmpih);
+i=0;j=0;
+h=bmpih-&gt;biHeight;
+w=bmpih-&gt;biWidth;
+//转换图像
+buff2asc(size,h,w,buffer,ansmap);
+//输出结果
+for(i=h-1;i&gt;=0;i--)
+{
+    fwrite(ansmap[i],sizeof(ansmap[i]),1,out);
+    for(j=0;j&lt;w;j++)
+    {
+        printf(&quot;%c&quot;,ansmap[i][j]);
+    }
+    puts(&quot;&quot;);
+    fwrite(&quot;\n&quot;,sizeof(&quot;\n&quot;),1,out);
+}
+fclose(out);
+return 0;
+</code></pre>
+
+<p>}</p>
+
+<p></pre>
+<h3><span style="color: #339966;">最后是makefile~</span></h3>
+<pre lang="make">
+CC=gcc
+bmp2ascall:main.o bmpRW.o buff2asc.o
+    $(CC) -o $@ $^
+buff2asc.o:buff2asc.c bmpRW.h Typedef.h buff2asc.h
+    $(CC) -c $&lt;
+bmpRW.o:bmpRW.c bmpRW.h Typedef.h
+    $(CC) -c $&lt;
+main.o:main.c bmpRW.c buff2asc.c bmpRW.h Typedef.h buff2asc.h
+    $(CC) -c $&lt;
+clean:
+    rm main.o bmpRW.o buff2asc.o
+</pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/codebrowser" title="CodeBrowser——android上的代码阅读器">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e5bf83e68385e99a8fe8aeb010-7-15" title="心情随记10.7.15">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-07-17</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#bmp-ref">bmp <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#bmp%E8%AF%BB%E5%86%99-ref">bmp读写 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#code-ref">code <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#program-ref">program <span>6</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F-ref">程序 <span>13</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BC%96%E7%A8%8B-ref">编程 <span>31</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E8%BD%AC%E6%8D%A2-ref">转换 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

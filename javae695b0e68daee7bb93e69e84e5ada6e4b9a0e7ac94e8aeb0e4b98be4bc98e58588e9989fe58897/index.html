@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>java数据结构学习笔记之优先队列</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>java数据结构学习笔记之优先队列 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>学着书上的写了一个优先队列，用堆实现。笔记一下
+<pre lang="java">
+package com.zerob13.PriorityQueue;</p>
+
+<p>/**
+ *
+ * @author yanglingfeng
+ */
+public class PriorityQueue {</p>
+
+<pre><code>private static final int def_size=10;
+private Comparable[] array;
+private int count;
+/**
+ * 初始化函数
+ */
+public PriorityQueue(){
+    array=new Comparable[def_size];
+    count=0;
+}
+/**
+ * 清理函数
+ */
+public void clear(){
+    for(int i=0;i&lt;count;i++)
+        array[i]=null;
+    count=0;
+}
+/**
+ * 添加一个元素
+ * @param val
+ */
+public void add(Comparable val){
+    if(count==array.length)expand();
+    int curr=count++;
+    while(curr&gt;0){
+        int parent=(curr-1)/2;
+        if(val.compareTo(array[parent])&gt;0)
+            break;
+        array[curr]=array[parent];
+        curr=parent;
+    }
+    array[curr]=val;
+}
+/**
+ * 移除顶端元素
+ * @return 最小元素
+ */
+public Comparable remove(){
+    if(count==0)
+       return null;
+    Comparable min=array[0];
+   Comparable last=array[--count];
+   array[count]=null;
+   int child,curr=0;
+   while((child=2*curr+1)&lt;count){
+       if(child+1&lt;count&amp;&amp;array[child+1].compareTo(array[child])&lt;0)
+           child++;
+       if(last.compareTo(array[child])&lt;=0)
+           break;
+       array[curr]=array[child];
+       curr=child;
+   }
+   array[curr]=last;
+   return min;
+}
+/**
+ * 判断是否为空队列
+ * @return boolean
+ */
+public boolean isEmpty(){
+    return count==0;
+}
+/**
+ * 返回大小
+ * @return int
+ */
+public int size(){
+    return count;
+}
+/**
+ * 返回最小值
+ * @return minval
+ */
+public Comparable getMin(){
+    if(count==0)
+        return null;
+    return array[0];
+}
+private void expand(){
+    Comparable[] newArray=new Comparable[2*array.length];
+    for(int i=0;i&lt;array.length;i++)
+        newArray[i]=array[i];
+    array=newArray;
+}
+@Override
+public String toString(){
+    String buf=&quot;&quot;;
+    int i=0;
+    int j=1;
+    int k=0;
+    while(i&lt;count){
+        if(k&lt;j){
+            buf+=array[i++]+&quot; &quot;;
+            k++;
+        }else{
+            buf+=array[i++]+&quot; &quot;;
+            k=0;
+            j*=2;
+        }
+
+    }
+    return buf;
+}
+</code></pre>
+
+<p>}
+</pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/2009e5a496e68b8de4b98be6a8a1e789b9e983a8e58886" title="2009外拍之模特部分">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e7a59de7a68fe982a3e4b8aae887aae794b1e79a84e794b7e4baba20e5b281e7949fe697a5" title="祝福那个自由的男人20岁生日">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2009-11-08</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#java-ref">java <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#PriorityQueue-ref">PriorityQueue <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97-ref">优先队列 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%A0%86-ref">堆 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ref">数据结构 <span>7</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BC%96%E7%A8%8B-ref">编程 <span>31</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

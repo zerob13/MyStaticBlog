@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>给文老板的矩阵</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>给文老板的矩阵 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>两个文件
+第一个是矩阵类的实现
+第二个是测试文件
+<pre lang="java">
+/**
+ * 文件名:Matrix.java
+ *
+ */</p>
+
+<p>/**
+ * @author zerob13
+ *
+ <em>/
+import java.util.</em>;</p>
+
+<p>public class Matrix {</p>
+
+<pre><code>/**
+ * @param args
+ */
+private int[][] mmat;
+private int n;
+public Matrix(int n){
+    this.n=n;
+    this.mmat=new int[n][];
+
+    for(int i=0;i&lt;n;i++){
+        this.mmat[i]=new int[n];
+        for(int j=0;j&lt;n;j++)
+        {
+            mmat[i][j]=0;
+        }
+    }
+}
+public Matrix(int n,int[][] mmat){
+    this.n=n;
+    this.mmat=new int[n][];
+
+    for(int i=0;i&lt;n;i++){
+        this.mmat[i]=new int[n];
+        for(int j=0;j&lt;n;j++)
+        {
+            this.mmat[i][j]=mmat[i][j];
+        }
+    }
+}
+public void ChangeValue(){
+    Scanner k=new Scanner(System.in);
+    for(int i=0;i&lt;this.n;i++)
+    {
+        for(int j=0;j&lt;this.n;j++)
+        {
+            this.mmat[i][j]=k.nextInt();
+
+        }
+
+    }
+}
+public Matrix mult(Matrix b){
+    int i,j,k;
+    Matrix temp=new Matrix(this.n);
+    int N;
+    N=this.n;
+    if(b.n!=this.n){
+        return null;
+    }
+    for(i=0;i&lt;N;i++)
+    {
+        for(j=0;j&lt;N;j++)
+        {
+            for(k=0;k&lt;N;k++)
+            {
+                temp.mmat[i][j]+=this.mmat[i][k]*b.mmat[k][j];
+                //temp.mmat[i][j]%=2;
+            }
+        }
+    }
+    return temp;
+}
+
+public void printm(){
+    for(int i=0;i&lt;this.n;i++)
+    {
+        for(int j=0;j&lt;this.n;j++)
+        {
+            System.out.print(this.mmat[i][j]+&quot; &quot;);
+        }
+        System.out.println();
+    }
+}
+</code></pre>
+
+<p>}
+</pre>
+<pre lang="java">
+/**
+ * 文件名:test.java
+ */</p>
+
+<p>/**
+ * @author S.T. Lab
+ *
+ */</p>
+
+<p>public class test {</p>
+
+<pre><code>/**
+ * @param args
+ */
+public static void main(String[] args) {
+    // TODO Auto-generated method stub
+    Matrix a=new Matrix(3);
+    Matrix b=new Matrix(3);
+    a.ChangeValue();
+    b.ChangeValue();
+    a=a.mult(b);
+    a.printm();
+}
+</code></pre>
+
+<p>}
+</pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/opencve7acace4b880e5a4a9" title="OpenCV第一天">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/javae8b4aae59083e89b87efbc8ce58f82e88083e7bd91e4b88ae4bba3e7a081" title="java贪吃蛇，参考网上代码">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2009-10-20</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#java-ref">java <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#Matrix-ref">Matrix <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%96%87-ref">文 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%9F%A9%E9%98%B5-ref">矩阵 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%B1%BB-ref">类 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BC%96%E7%A8%8B-ref">编程 <span>31</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

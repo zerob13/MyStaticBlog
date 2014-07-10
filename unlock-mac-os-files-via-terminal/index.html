@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>批量解除Mac还原后的文件锁</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>批量解除Mac还原后的文件锁 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>最近重新还原了下系统，然后出现了一个很坑爹的情况，如下图：</p>
+
+<p><a href="http://www.zerob13.in/wp-content/uploads/2013/09/Screen-Shot-2013-09-07-at-1.32.38-PM.png"><img class="aligncenter size-full wp-image-2653" alt="Screen Shot 2013-09-07 at 1.32.38 PM" src="http://www.zerob13.in/wp-content/uploads/2013/09/Screen-Shot-2013-09-07-at-1.32.38-PM.png" width="184" height="213" /></a></p>
+
+<p>坑爹啊，这是什么玩意！！！！仔细一看原来是文件被lock住了，分析了下这是和 Time Machine 有关系的，貌似超过一定时间没动的文档就会被locked，如果只是一般的文档也就算了，其实很多配置文件甚至本地缓存文件都被lock住，出现的现象就是每次打开finder都会转菊花一会儿。总之，就是用户目录下一堆文件被locked住了，要是手动一个个改回来估计会吐血，那么做为程序员自然会想想解决办法。</p>
+
+<p>首先分析下，locked这个属性貌似linux下面没接触到过，估计是mac自己有的一个文件tag，所以去查了查资料，原来是一个 flag 叫做 uchg，只要把相关文件的 flag 重置到 nouchg 就解决问题了。</p>
+
+<p>那么我们来查找这些文件吧，代码如下:</p>
+
+<p><code>find /Users/youraccountname/ -flags uchg &gt; lk.txt</code></p>
+
+<p>我把列表重定向到了一个文本里面，方便后续处理。中途有个小插曲，我输入命令后给我回复了一条:</p>
+
+<p><code>find: unknown predicate '-flags'</code></p>
+
+<p>仔细一看发现是我的 find 默认指向了brew 安装的gfind，所以不支持这个参数，简单，输入:</p>
+
+<p><code>brew remove findutils</code></p>
+
+<p>卸载，或者直接强制指定系统默认的 find 的位置来执行就行，系统默认 find 在</p>
+
+<p><code>/usr/bin/find</code></p>
+
+<p>那么，到现在，我们得到了一个lk.txt文件，里面列出来了你名下的所有的 locked 文件，之后我们怎么办呢？再次求救万能的 Google 搜到了一条命令</p>
+
+<p><code>chflags -R nouchg /PATH/TO/DIRECTORY/WITH/LOCKED/FILES/</code></p>
+
+<p>这就可以把文件解锁了，对于这个命令的解释，后面相关连接里面有介绍，有兴趣的可以看一下。</p>
+
+<p>最后我把这些操作打包成了一个 shell 脚本，方便自己以后使用。脚本还有个可以改动的地方，我还是把文件列表输出到磁盘，因为我希望看到哪些文件被修改，如果你不希望，你可以直接在内存里面重定向，这样速度应该还会快上那么一点点。</p>
+
+<pre><code>#!/bin/sh
+find /Users/zerob13/ -flags uchg &gt; lk.txt
+while read -r line
+do
+    echo &quot;$line&quot;  
+    chflags -R nouchg &quot;$line&quot;
+done &lt; lk.txt
+</code></pre>
+
+<p>相关连接
+<a href="http://old.todddeland.com/2009/06/08/find-locked-files-in-mac-os-x-via-terminal/" title="Find locked files in Mac OS X (via Terminal)" target="_blank">Find locked files in Mac OS X (via Terminal)</a></p>
+
+<p><a href="http://superuser.com/questions/40749/command-to-unlock-locked-files-on-os-x" title="Command to unlock “Locked” files on OS X" target="_blank">Command to unlock “Locked” files on OS X</a></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/recent-zatan" title="近况杂谈">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/android-ying-yong-ru-he-pan-duan-shi-fou-shi-ping-ban" title="Android 应用如何判断是否是平板">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2013-09-07</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#mac-ref">mac <span>11</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#shell-ref">shell <span>4</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#unlock-mac-files-ref">unlock mac files <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

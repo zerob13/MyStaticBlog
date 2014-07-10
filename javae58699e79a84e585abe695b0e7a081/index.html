@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Java写的八数码</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>Java写的八数码 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>先献上java版八数码的代码，未使用启发式搜索，只是将所有状态预处理，然后直接读出罢了。。。
+<pre lang="java">
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */</p>
+
+<p>import java.util.*;</p>
+
+<p>/**
+ *
+ * @author Zerob13
+ */
+class node{
+    int[][] state;
+    int pre,tem;
+    char dir;
+    node()
+    {
+        int i,j,k=1;
+     state=new int[3][3];
+        for(i=0;i<3;i++)
+        {
+            for(j=0;j<3;j++)
+            {
+                state[i][j]=k++;
+            }
+        }
+        pre=tem=dir=0;
+    }
+    int HASH()
+     {
+          int fac[]={1,1,2,6,24,120,720,5040,40320,362880};
+        int i,j,ret=0,num=0;
+        int[] b=new int[10];
+        for(i=0;i<3;i++)
+            for(j=0;j<3;j++)
+            {
+                b[ret++]=state[i][j];
+            }
+            ret=0;
+        for(i=0;i<9;i++)
+        {
+                num=0;
+            for(j=0;j<i;j++)
+            {
+                if(b[j]>b[i])  num++;
+            }
+            ret+=fac[i]*num;
+        }
+            tem=ret;
+        return ret;
+    }
+}</p>
+
+<p>public class Main {</p>
+
+<p>static  char output(int q)
+{
+        if(q==1)
+            return &lsquo;u&rsquo;;
+        if(q==2)
+            return &rsquo;d&rsquo;;
+        if(q==3)
+            return &lsquo;r&rsquo;;
+        if(q==0)
+            return &lsquo;l&rsquo;;
+        return 0;
+}</p>
+
+<pre><code>public static void main(String[] args) {
+
+  node[] queue=new node[362882];
+  byte[] hash=new byte[362882];
+  int[] sa=new int[362882];
+  int i,top,la,j,aaa,con;
+  for(i=0;i&lt;362882;i++)hash[i]=0;
+  int[][] dir=;
+  top=la=0;
+  node head = new node(),p=new node();
+  aaa=1;
+   for(i=0;i&lt;3;i++)
+    {
+        for(j=0;j&lt;3;j++)
+        {
+            head.state[i][j]=aaa;
+            aaa++;
+         }
+    }
+  head.pre=-1;
+  head.HASH();
+  head.dir=0;
+  hash[head.tem]=1;
+  top=0;
+  la=1;
+  con=0;
+   queue[0]=new node();
+     for(i=0;i&lt;3;i++)
+    {
+        for (j = 0; j &lt; 3; j++) {
+            queue[0].state[i][j] = head.state[i][j];
+        }
+    }
+    queue[0].pre = head.pre;
+    queue[0].dir = head.dir;
+    queue[0].tem = head.tem;
+  while(top&lt;la)
+  {
+       int ii,e,f,x,y,tem;
+       for(ii=0;ii&lt;3;ii++)
+       {
+           for(j=0;j&lt;3;j++)
+           {
+               head.state[ii][j]=queue[top].state[ii][j];
+           }
+       }
+       head.pre=queue[top].pre;
+       head.dir=queue[top].dir;
+       head.tem=queue[top].tem;
+      sa[head.tem]=top;
+      e=f=0;
+       for(ii=0;ii&lt;3;ii++)
+            for(j=0;j&lt;3;j++)
+            {
+                p.state[ii][j]=head.state[ii][j];
+                if(p.state[ii][j]==9)
+                    {e=ii;f=j;}
+            }
+
+      for(i=0;i&lt;4;i++)
+            {
+                x=dir[i][0]+e;
+                y=dir[i][1]+f;
+                if(x&lt;0||y&lt;0||x&gt;=3||y&gt;=3)
+                continue;
+                   p.state[x][y]^=p.state[e][f];
+                   p.state[e][f]^=p.state[x][y];
+                   p.state[x][y]^=p.state[e][f];
+                  tem=p.HASH();
+                   if(hash[tem]==0)
+                   {
+                      p.pre=top;
+                        p.tem=tem;
+                        p.dir=output(i);
+                        hash[tem]=1;
+                        queue[la]=new node();
+                        for(ii=0;ii&lt;3;ii++)
+                        {
+                            for(j=0;j&lt;3;j++)
+                            {
+                                queue[la].state[ii][j]=p.state[ii][j];
+                            }
+                        }
+                        queue[la].pre=p.pre;
+                        queue[la].dir=p.dir;
+                        queue[la].tem=p.tem;
+                        la++;
+                   }
+                   p.state[x][y]^=p.state[e][f];
+                   p.state[e][f]^=p.state[x][y];
+                   p.state[x][y]^=p.state[e][f];
+            }
+             top++;
+  }
+
+
+  Scanner in=new Scanner(System.in);
+  String kk;
+  while(in.hasNextLine())
+  {
+      kk=in.nextLine();
+      int[] s=new int[100];
+      int bbb=0;
+      aaa=0;
+      for(i=0;i&lt;kk.length();i++)
+      {
+          if(kk.charAt(i)!=' ')
+          {
+              if(kk.charAt(i)=='x')
+              {
+                  s[aaa++]=9;
+              }else
+                  s[aaa++]=kk.charAt(i)-'0';
+
+          }
+      }
+      for(i=0;i&lt;3;i++)
+      {
+          for(j=0;j&lt;3;j++)
+          {
+              head.state[i][j]=s[bbb++];
+          }
+      }
+      aaa=head.HASH();
+      if(hash[aaa]!=0)
+      {
+          node star=queue[sa[aaa]];
+          while(star.pre!=-1)
+          {
+              System.out.print(star.dir);
+              star=queue[star.pre];
+          }
+          System.out.println(&quot;&quot;);
+      }else
+      {
+          System.out.println(&quot;unsolvable&quot;);
+      }
+  }
+
+}
+</code></pre>
+
+<p>}</p>
+
+<p></pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e5bd92e5b9b6e68e92e5ba8fefbc8ce6af94e8be83e5a5bde79086e8a7a3e79a84e4b880e7a78de68e92e5ba8f" title="归并排序，比较好理解的一种排序">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e8-af-9d-e8-af-b4-e5-89-8d-e4-b8-8d-e4-b9-85-e6-90-9e-e8-bf-87-e4-b8-80-e5-bc-a0hdr-ef-bc-8c-e6-94-be-e4-b8-8a-e6-9d-a5-e7-8e-a9-e7-8e-a9" title="话说前不久搞过一张HDR，放上来玩玩~">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2009-08-25</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#acm-ref">acm <span>8</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#eight-ref">eight <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#java-ref">java <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%B9%BF%E6%90%9C-ref">广搜 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%90%9C%E7%B4%A2-ref">搜索 <span>3</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E9%A2%84%E5%A4%84%E7%90%86-ref">预处理 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

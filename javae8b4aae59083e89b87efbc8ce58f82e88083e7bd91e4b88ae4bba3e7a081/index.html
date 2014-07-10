@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>java贪吃蛇，参考网上代码</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>java贪吃蛇，参考网上代码 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <pre><code>  参考了网上的一些代码，写了一个小小的贪吃蛇，比较简单，但是学到很多。比如线程，比如绘图，还有对类的理解加深了。
+ 两个文件的
+第一个是snake的模型
+</code></pre>
+
+<p><pre lang="JAVA"></p>
+
+<p>/**
+ * @author zerob13
+ *
+ <em>/
+import java.util.</em>;
+import javax.swing.*;</p>
+
+<p>class Node{
+    int x,y;
+    Node(int x,int y)
+    {
+        this.x=x;
+        this.y=y;
+    }</p>
+
+<p>}
+ class Snake  implements Runnable{</p>
+
+<pre><code>Greedsnake gs;//界面
+boolean[][] mmap;//地图
+LinkedList nodeArray =new LinkedList();//蛇身体
+Node food;//食物
+int maxX;
+int maxY;//界面大小
+int dir=2;//方向
+boolean run=false;//运行状态
+int time=200;//速度
+boolean pause=false;
+int score=0;//分数
+int countMove=0;
+ public static final int UP = 2;
+ public static final int DOWN = 4;
+ public static final int LEFT = 1;
+ public static final int RIGHT = 3;//方向常量
+ /**
+  * 
+  * @param g 界面输入
+  * @param maxX 最大x边长
+  * @param maxY  最大y边长
+  */
+ public Snake(Greedsnake g,int maxX,int maxY)//初始化
+ {
+     this.gs=g;
+     this.maxX=maxX;
+     this.maxY=maxY;
+     mmap=new boolean[maxX][];
+     for(int i=0;i&lt;maxX;i++)
+     {
+         mmap[i]=new boolean[maxY];
+         Arrays.fill(mmap[i], false);
+     }
+
+     int inita=maxX&gt;20?10:maxX/2;
+     for(int i=0;i&lt;inita;i++)
+     {
+         int x=maxX/2+i;
+         int y=maxY/2;
+         nodeArray.add(new Node(x,y));
+         mmap[x][y]=true;
+     }
+     food=creatfood();
+     mmap[food.x][food.y]=true;
+ }
+ public void changeDirection(int newDir) {
+        if (dir % 2 != newDir % 2)// 避免冲突
+        {
+            dir = newDir;
+        }
+    }
+ public boolean MoveOn(){//移动函数
+     Node n=(Node)nodeArray.getFirst();//取头部，移动
+     int x=n.x,y=n.y;
+     switch(dir)
+     {
+     case UP:
+         y--;
+         break;
+     case DOWN:
+         y++;
+         break;
+     case LEFT:
+         x--;
+         break;
+     case RIGHT:
+         x++;
+         break;
+
+     }
+     if((0&lt;=x&amp;&amp;x&lt;maxX)&amp;&amp;(0&lt;=y&amp;&amp;y&lt;maxY))//越界判断
+     {
+         if(mmap[x][y])//是否撞倒东西
+         {
+             if(x==food.x&amp;&amp;y==food.y){
+                 nodeArray.addFirst(food);
+                 int scoreget=(10000-200*countMove)/time;
+                 score+=scoreget&gt;0?scoreget:10;
+                 countMove=0;
+                 food=creatfood();
+                 mmap[food.x][food.y]=true;
+                 return true;
+             }else
+             {
+                 return false;
+             }
+         }else{//正常移动
+             nodeArray.addFirst(new Node(x,y));//加头
+             mmap[x][y]=true;
+             n=(Node)nodeArray.removeLast();//去尾巴
+             mmap[n.x][n.y]=false;
+             countMove++;
+             return true;
+
+         }
+     }
+     return false;//over
+
+ }
+ /**
+  * 食物创造函数
+  * @return node
+  */
+private Node creatfood() {
+    // TODO Auto-generated method stub
+    int x=0,y=0;
+    do{
+        Random r=new Random();
+        x=r.nextInt(maxX);
+        y=r.nextInt(maxY);
+
+    }while(mmap[x][y]);
+    return new Node(x,y);
+
+}
+@Override
+/**
+ * 运行线程
+ */
+public void run() {
+    // TODO Auto-generated method stub
+    run=true;
+    while(run){
+        try{
+            Thread.sleep(time);
+
+        }catch(Exception e){
+            break;
+        }
+        if(!pause){
+            if(MoveOn()){
+                gs.repaint();
+
+            }else{
+                JOptionPane.showMessageDialog(null, &quot;GAME OVER&quot;,
+                        &quot;Game Over&quot;, JOptionPane.INFORMATION_MESSAGE);
+                break;
+
+            }
+        }
+    }
+    run=false;
+
+}
+/**
+ * 暂停函数
+ */
+public void changePauseState() {
+    pause = !pause;
+}
+</code></pre>
+
+<p>}
+</pre>
+然后是主界面的绘画和调用蛇模型
+<pre lang="JAVA"></p>
+
+<p>/**
+ *
+ * @author zerob13
+ *
+ <em>/
+import java.awt.</em>;
+import java.awt.event.<em>;
+import javax.swing.</em>;
+import java.util.*;</p>
+
+<p>public class Greedsnake implements KeyListener {</p>
+
+<pre><code>JFrame mainFrame;
+Canvas paintCanvas;
+JLabel labelScore;
+Snake snake=null;
+  public static final int canvasWidth = 200;
+    public static final int canvasHeight = 300;
+    public static final int nodeWidth = 10;
+    public static final int nodeHeight = 10;
+public Greedsnake(){
+    mainFrame=new JFrame(&quot;贪吃蛇&quot;);
+    Container cp=mainFrame.getContentPane();
+    labelScore=new JLabel(&quot;积分:&quot;);
+    cp.add(labelScore,BorderLayout.NORTH);
+    paintCanvas=new Canvas();
+    paintCanvas.setSize(canvasWidth + 1, canvasHeight + 1);
+     paintCanvas.addKeyListener(this);
+     cp.add(paintCanvas, BorderLayout.CENTER);
+     JPanel panelButtom=new JPanel();
+     panelButtom.setLayout(new BorderLayout());
+     mainFrame.addKeyListener(this);
+        mainFrame.pack();
+        mainFrame.setResizable(false);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setVisible(true);
+        begin();
+}
+public static void main(String[] args) {
+    // TODO Auto-generated method stub
+    Greedsnake gs = new Greedsnake();
+
+}
+
+@Override
+public void keyPressed(KeyEvent e) {
+    // TODO Auto-generated method stub
+    int keyCode=e.getKeyCode();
+    if(snake.run){
+        switch(keyCode){
+        case KeyEvent.VK_UP:
+            snake.changeDirection(snake.UP);
+            break;
+        case KeyEvent.VK_DOWN:
+            snake.changeDirection(snake.DOWN);
+            break;
+        case KeyEvent.VK_LEFT:
+            snake.changeDirection(snake.LEFT);
+            break;
+        case KeyEvent.VK_RIGHT:
+            snake.changeDirection(snake.RIGHT);
+            break;
+        case KeyEvent.VK_P:
+            snake.changePauseState();// 暂停或继续
+            break;
+        default:
+        }
+    }
+    if (keyCode == KeyEvent.VK_R || keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_ENTER) {
+        snake.run = false;
+        begin();
+    }
+}
+
+@Override
+public void keyReleased(KeyEvent e) {
+    // TODO Auto-generated method stub
+
+}
+
+@Override
+public void keyTyped(KeyEvent e) {
+    // TODO Auto-generated method stub
+
+}
+void repaint(){
+    Graphics g=paintCanvas.getGraphics();
+    g.setColor(Color.WHITE);
+    g.fillRect(0,0,canvasWidth,canvasHeight);
+    g.setColor(Color.black);
+    LinkedList na=snake.nodeArray;
+    Iterator it=na.iterator();
+    while(it.hasNext()){
+        Node n=(Node)it.next();
+        drawNode(g,n);
+    }
+    g.setColor(Color.red);
+    Node n=snake.food;
+    drawNode(g,n);
+    updateScore();
+}
+private void drawNode(Graphics g,Node n){
+      g.fillRect(n.x * nodeWidth, n.y * nodeHeight, nodeWidth - 1, nodeHeight - 1);
+}
+public void updateScore(){
+    String s = &quot;积分: &quot; + snake.score;
+    labelScore.setText(s);
+}
+void begin() {
+    if (snake == null || !snake.run) {
+        snake = new Snake(this, canvasWidth / nodeWidth,
+                this.canvasHeight / nodeHeight);
+        (new Thread(snake)).start();
+    }
+}
+</code></pre>
+
+<p>}
+</pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e7bb99e69687e88081e69dbfe79a84e79fa9e998b5" title="给文老板的矩阵">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e7ad89e5be85efbc8ce5868de4b8b4" title="等待，再临">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2009-10-18</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E6%91%84%E5%BD%B1%E4%B8%8E%E6%88%91-ref">摄影与我 <span>199</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#code-ref">code <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#java-ref">java <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#swing-ref">swing <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%B8%B8%E6%88%8F-ref">游戏 <span>2</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F-ref">程序 <span>13</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E8%B4%AA%E5%90%83%E8%9B%87-ref">贪吃蛇 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

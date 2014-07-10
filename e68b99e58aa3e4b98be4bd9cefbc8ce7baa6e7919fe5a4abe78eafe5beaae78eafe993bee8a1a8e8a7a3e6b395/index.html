@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>拙劣之作，约瑟夫环循环链表解法</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>拙劣之作，约瑟夫环循环链表解法 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>下学期的数据结构期末作业貌似要做这个，估计就是循环链表的模拟解法吧。。。
+所以就凭着记忆写了一个比较简单的cpp版本。
+大牛一笑哂之～
+<pre lang="cpp">
+#include<cstdlib>
+#include<iostream>
+using namespace std;
+struct node{
+    int data;
+    int index;
+    node <em>next,*pre;
+}*root,*tail;
+void del(node</em> a)
+{
+    node *p;
+    p=a-&gt;pre;
+    p-&gt;next=a-&gt;next;
+    a-&gt;next-&gt;pre=p;
+    cout&lt;<a->index&lt;&lt;endl;
+    free(a);
+    return ;
+}</p>
+
+<p>void add(int aas,int ind)
+{
+    node *aa=new node;
+    aa-&gt;data=aas;
+    aa-&gt;index=ind;
+    aa-&gt;pre=tail;
+    tail-&gt;next=aa;
+    aa-&gt;next=root;
+    tail=aa;
+    root-&gt;pre=tail;
+}
+int main()
+{
+    int i;
+    int a;
+    int n,m;
+    m=4;n=6;
+    cin&gt;&gt;m&gt;&gt;n;
+    for(i=0;i&lt;n;i++)
+    {</p>
+
+<pre><code>    cin&gt;&gt;a;
+    if(i){
+        add(a,i+1);
+    }else{
+        root=new node;
+        tail=root;
+        root-&gt;data=a;
+        root-&gt;index=i+1;
+        root-&gt;next=tail;
+        root-&gt;pre=tail;
+        tail-&gt;next=root;
+        tail-&gt;pre=root;
+    }
+}
+node *tt;
+tt=root;
+while(n){
+    int kk=0;
+    while(1)
+    {
+        kk++;
+        if(kk==m)
+        {
+            m=tt-&gt;data;
+            del(tt);
+            tt=tt-&gt;next;
+            break;
+        }else {
+            tt=tt-&gt;next;
+        }
+    }
+        n--;
+}
+</code></pre>
+
+<p>}</p>
+
+<p></pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/e788b1e68385e79a84e6a8a1e6a0b7e28094e28094e4ba94e69c88e5a4a9" title="爱情的模样——五月天">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/e6ada6e4b989e6b0b8e5bab7e4b98be8a18c" title="武义&amp;永康之行">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-01-23</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#cpp-ref">cpp <span>4</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%BE%AA%E7%8E%AF-ref">循环 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ref">数据结构 <span>7</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%AE%97%E6%B3%95-ref">算法 <span>10</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BA%A6%E7%91%9F%E5%A4%AB%E7%8E%AF-ref">约瑟夫环 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BC%96%E7%A8%8B-ref">编程 <span>31</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E9%93%BE%E8%A1%A8-ref">链表 <span>1</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>

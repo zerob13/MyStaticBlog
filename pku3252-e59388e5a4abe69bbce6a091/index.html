@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>pku3252 哈夫曼树</title>
+  
+    <meta name="author" content="Lingfeng Yang">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+ 
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">混沌的云</a>
+          <ul class="nav">
+            
+              
+
+
+  <li><a href="/archive">Archive</a></li>
+
+
+            
+              
+
+
+  <li><a href="/tags">Tags</a></li>
+
+
+            
+              
+
+
+  <li><a href="/categories">Categories</a></li>
+
+
+            
+              
+
+
+  <li><a href="/pages">Pages</a></li>
+
+
+            
+              
+
+
+  <li><a href="/about">About Me</a></li>
+
+
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+  <h1>pku3252 哈夫曼树 </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    <p>今天开始学习学习哈夫曼树，于是就去找点题目做做，毕竟学数据结构这种东西还是让oj来验证你的想法最方便了。
+google了一下，pku的3252貌似是个软柿子，捏之～
+看了一些关于哈夫曼的介绍，大致有个想法了，打出来，wa。。。看来想错了。
+于是再看资料，发现需要动态寻找最小的两个节点的，于是就写了一个比较暴力的，参考网上的资料。
+6365627 zerob13 3253 <span style="color: #ff0000;"> Accepted</span> <span style="color: #33cccc;">236K</span> <span style="color: #33cccc;">250MS</span> C++    628B    2010-01-24 15:08:06
+<pre lang="cpp">
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+int lef[20001];
+int n;
+int cmp(const void <em>a,const void *b)
+{
+    return *(int</em>)a-<em>(int</em>)b;
+}</p>
+
+<p>int main (int argc, char * const argv[]) {
+    int i,j,k,l;
+    while(scanf(&ldquo;%d&rdquo;,&amp;n)!=EOF){
+        for(i=0;i<n;i++)
+        {
+            scanf("%d",&lef[i]);
+        }
+        qsort(lef,n,sizeof(int),cmp);
+        long long int sum=0;
+        for(i=1;i<n;i++)
+        {
+            lef[i]+=lef[i-1];
+            sum+=lef[i];
+            k=lef[i];
+            for(j=i+1;j<n;j++)
+            {
+                if(k>lef[j])
+                {
+                    lef[j-1]=lef[j];
+                }else {
+                    break;
+                }</p>
+
+<pre><code>        }
+        lef[j-1]=k;
+    }
+    printf(&quot;%lld\n&quot;,sum);
+}
+
+return 0;
+</code></pre>
+
+<p>}</p>
+
+<p></pre>
+但是很不爽阿，感觉这种代码不是我的风格，于是打算用stl重新写一遍，于是我就开始用stl折腾了。。。
+之后就出了一个效率好多了的stl版本。。。
+6365653 zerob13 3253    <span style="color: #ff0000;">Accepted</span> <span style="color: #33cccc;">348K</span> <span style="color: #33cccc;">32MS</span> C++   819B    2010-01-24 15:18:24
+<pre lang="cpp">#include<stdio.h>
+#include<string.h>
+#include<queue>
+#include<stdlib.h>
+using namespace std;
+int lef;
+int n;
+int cmp(const void <em>a,const void *b)
+{
+    return *(int</em>)a-<em>(int</em>)b;
+}
+struct node{
+    int a;
+    friend bool operator&lt; (node n1, node n2)
+    {
+        return n1.a &gt; n2.a;
+    }
+};
+priority_queue<node>zerob;
+int main (int argc, char * const argv[]) {
+    int i,j,k,l;
+    node kk;
+    while(scanf(&ldquo;%d&rdquo;,&amp;n)!=EOF){
+        while(!zerob.empty()){
+            zerob.pop();
+        }
+        for(i=0;i&lt;n;i++)
+        {
+            scanf(&ldquo;%d&rdquo;,&amp;lef);
+            kk.a=lef;
+            zerob.push(kk);</p>
+
+<pre><code>    }
+
+    long long int sum=0;
+    while(zerob.size()&gt;1)
+    {
+        node a=zerob.top();
+        zerob.pop();
+        node b=zerob.top();
+        zerob.pop();
+        sum+=a.a+b.a;
+        kk.a=a.a+b.a;
+        zerob.push(kk);
+    }
+    printf(&quot;%lld\n&quot;,sum);
+
+}
+return 0;
+</code></pre>
+
+<p>}</p>
+
+<p></pre></p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+        <ul>
+          
+            <li class="prev"><a href="/dont-push-mee28094e28094sweetbox" title="Don&#39;t push me——sweetbox">&larr; Previous</a></li>
+          
+          
+
+            <li><a href="/archive">Archive</a></li>
+
+          
+            <li class="next"><a href="/my-workspace" title="My workspace">Next &rarr;</a></li>
+          
+          
+        </ul>
+      </ul>
+    </div>
+    <hr>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'jekyllbootstrap'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+  </div>
+  
+  <div class="span4">
+    <h4>Published</h4>
+    <div class="date"><span>2010-01-24</span></div>
+    <br>
+    <h4>Categories</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>672</span></a>
+</li>
+    
+    </ul>
+    <br>
+    <h4>Tags</h4>
+    <ul class="tag_box">
+    
+      <li>
+  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#acm-ref">acm <span>8</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#code-ref">code <span>28</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#pku3252-ref">pku3252 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E5%93%88%E5%A4%AB%E6%9B%BC-ref">哈夫曼 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ref">数据结构 <span>7</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E6%A0%91-ref">树 <span>1</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%AE%97%E6%B3%95-ref">算法 <span>10</span></a>
+</li>
+    
+      <li>
+  <a href="/tags/#%E7%BC%96%E7%A8%8B-ref">编程 <span>31</span></a>
+</li>
+    
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>&copy; Lingfeng Yang 2013 
+          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+<script src="//cdnjscn.b0.upaiyun.com/libs/prettify/r298/prettify.min.js"></script>
+<script>
+  var pres = document.getElementsByTagName("pre");
+  for (var i=0; i < pres.length; ++i) {
+    pres[i].className = "prettyprint linenums";
+  }
+  prettyPrint();
+</script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  var pluginUrl = '//www.google-analytics.com/plugins/ga/inpage_linkid.js';
+  _gaq.push(['_require', 'inpage_linkid', pluginUrl]);
+  _gaq.push(['_setAccount', 'UA-123-12']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>
