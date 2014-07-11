@@ -2,9 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>CodeReader的诞生</title>
   
     <meta name="author" content="Lingfeng Yang">
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic" />
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -12,9 +19,16 @@
     <![endif]-->
 
     <!-- Le styles -->
-    <link href="/assets/twitter/stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet" media="all">
-<link href="/assets/twitter/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
-<link href="/assets/twitter/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
+    <link href="/assets/gor-theme-blink/stylesheets/normalize.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/gor-theme-blink/stylesheets/nprogress.css" type="text/css" rel="stylesheet" media="all">
+<link href="/assets/gor-theme-blink/stylesheets/style.css" type="text/css" rel="stylesheet" media="all">
+<script src="/assets/gor-theme-blink/javascripts/click.js"></script>
+<script src="/assets/gor-theme-blink/javascripts/jquery.min.js"></script>
+<script src="/assets/gor-theme-blink/javascripts/jquery.fitvids.js"></script>
+<script src="/assets/gor-theme-blink/javascripts/jquery.history.js"></script>
+<script src="/assets/gor-theme-blink/javascripts/nprogress.js"></script>
+<script src="/assets/gor-theme-blink/javascripts/scripts.js"></script>
+<link href="/assets/gor-theme-blink/widgets/google_prettify/stylesheets/twitter-bootstrap.css" type="text/css" rel="stylesheet" media="all">
  
 
     <!-- Le fav and touch icons -->
@@ -25,14 +39,15 @@
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
   -->
   </head>
-
   <body>
-
-    <div class="navbar">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="brand" href="/">混沌的云</a>
-          <ul class="nav">
+  <div id="wrapper">
+      <header class="site-header">
+          <div class="container">
+              <div class="site-title-wrapper">
+                  <h1 class="site-title"><a class="js-ajax-link" href="http://blog.zerob13.in" title="混沌的云">混沌的云</a></h1>
+                  <a class="button-square" href="/rss.xml"><i class="fa fa-rss"></i></a>
+          </div>
+          <ul class="site-nav">
             
               
 
@@ -44,45 +59,23 @@
               
 
 
-  <li><a href="/tags">Tags</a></li>
-
-
-            
-              
-
-
-  <li><a href="/categories">Categories</a></li>
-
-
-            
-              
-
-
-  <li><a href="/pages">Pages</a></li>
-
-
-            
-              
-
-
-  <li><a href="/about">About</a></li>
+  <li><a href="/about">About Me</a></li>
 
 
             
           </ul>
-        </div>
       </div>
-    </div>
-
-    <div class="container">
-
-      <div class="content">
-        <div class="page-header">
-  <h1>CodeReader的诞生 </h1>
-</div>
-
-<div class="row">
-  <div class="span8">
+      </header>
+ <div id="ajax-container">
+     <div id="post-index" class="container">
+        <article class="post-container post">
+    <header class="post-header">
+    <h1 class="post-title">CodeReader的诞生</h1>
+    <p class="post-date">
+        <time >2010-07-06</time>
+    </p>
+    </header>
+    <div class="post-content clearfix">
     <p>首届Google暑期大学生博客分享大赛——2010 Andriod篇</p>
 
 <p>自从买了android的手机后，用这一直都挺舒服的，从最早买的G1到现在用的G3,android系统的开发让我爱不释手，但是渐渐的我却发现在上面看代码却不是那么的爽快。基本上只能用txt格式的方法看，但是白底黑字的代码是无法让好“色”的我满足的，于是就萌发了自己DIY一个代码阅读器的想法。
@@ -174,25 +167,7 @@ public View getView(int arg0, View arg1, ViewGroup arg2) {
 这样，基本上这个程序就完成了。测试了几段代码，效果还不错~如果大家喜欢的话可以在这里下载哦
 <a href="http://cid-d94239a09a81fece.skydrive.live.com/self.aspx/.Public/Codereader%200.1.apk">猛击这里下载CodeReader</a></p>
 
-    <hr>
-    <div class="pagination">
-      <ul>
-        <ul>
-          
-            <li class="prev"><a href="/e7bb8de585b4e99a8fe68b8de28094e2809410-7-6" title="绍兴随拍——10.7.6">&larr; Previous</a></li>
-          
-          
 
-            <li><a href="/archive">Archive</a></li>
-
-          
-            <li class="next"><a href="/e5958aefbc8ce5a4a9e9bb91e4ba86e5958a" title="啊，天黑了啊">Next &rarr;</a></li>
-          
-          
-        </ul>
-      </ul>
-    </div>
-    <hr>
     
 <div id="disqus_thread"></div>
 <script>
@@ -208,57 +183,62 @@ public View getView(int arg0, View arg1, ViewGroup arg2) {
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
 
-  </div>
-  
-  <div class="span4">
-    <h4>Published</h4>
-    <div class="date"><span>2010-07-06</span></div>
-    <br>
-    <h4>Categories</h4>
-    <ul class="tag_box">
-    
-      <li>
-  <a href="/categories/#%E9%9A%8F%E8%AE%B0-ref">随记 <span>671</span></a>
-</li>
-    
-    </ul>
-    <br>
-    <h4>Tags</h4>
-    <ul class="tag_box">
-    
-      <li>
-  <a href="/tags/#%E7%A8%8B%E5%BA%8F%E4%BA%BA%E7%94%9F-ref">程序人生 <span>60</span></a>
-</li>
-    
-      <li>
-  <a href="/tags/#Android-ref">Android <span>25</span></a>
-</li>
-    
-      <li>
-  <a href="/tags/#google-ref">google <span>16</span></a>
-</li>
-    
-      <li>
-  <a href="/tags/#java-ref">java <span>28</span></a>
-</li>
-    
-      <li>
-  <a href="/tags/#%E5%BC%80%E5%8F%91-ref">开发 <span>8</span></a>
-</li>
-    
-    </ul>
-  </div>
-</div>
+    </div>
+    <footer class="post-footer clearfix">
+            <!-- <p class="post-tags"><span>Tagged:</span> </p> -->
+            <div class="share">
+                   <a class="icon-twitter" href="http://twitter.com/share?text=CodeReader的诞生&url=http://blog.zerob13.in/codereadere79a84e8af9ee7949f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
 
-      </div>
+            <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.zerob13.in/codereadere79a84e8af9ee7949f"
+                onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                <i class="fa fa-facebook"></i>
+                <span class="hidden">Facebook</span>
+            </a>
 
-      <footer>
-        <p>&copy; Lingfeng Yang 2014 
-          with help from <a href="http://github.com/wendal/gor" target="_blank" title="Gor -- Fast Blog">Gor</a>
-          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
-		  and Idea from <a href="http://ruhoh.com" target="_blank" title="The Definitive Technical Blogging Framework">ruhoh</a>
-        </p>
-      </footer>
+            <a class="icon-google-plus" href="https://plus.google.com/share?url=http://blog.zerob13.in/codereadere79a84e8af9ee7949f"
+               onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+               <i class="fa fa-google-plus"></i>
+                <span class="hidden">Google+</span>
+            </a>
+            </div>
+        </footer>
+<!-- <div class="pagination"> -->
+<!--            -->
+<!--             <a href="/e7bb8de585b4e99a8fe68b8de28094e2809410-7-6" title="绍兴随拍——10.7.6"></a> -->
+<!--            -->
+<!--            -->
+
+<!--            -->
+<!--             <a href="/e5958aefbc8ce5a4a9e9bb91e4ba86e5958a" title="啊，天黑了啊">Next &rarr;</a> -->
+<!--            -->
+<!--            -->
+<!--     </div> -->
+
+</article>
+
+
+     </div>
+    </div>
+
+  </div>
+
+   
+ <footer class="footer">
+        <div class="container">
+            <div class="site-title-wrapper">
+                <h1 class="site-title"><a class="js-ajax-link" title="混沌的云" href="http://blog.zerob13.in">混沌的云</a></h1>
+
+                <a class="button-square button-jump-top js-jump-top" href="#"><i class="fa fa-angle-up"></i></a>
+            </div>
+
+            <p class="footer-copyright">&copy;  / Published with <a href="http://github.com/wendal/gor">Gor</a> / <a href="https://github.com/zerob13/gor-theme-blink">gor-theme-blink </a> By <a href="http://zerob13.in">zerob13</a> Fork from <a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a></p>
+        </div>
+    </footer>
+
 
     </div> <!-- /container -->
 
