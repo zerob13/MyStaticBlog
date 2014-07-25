@@ -2,7 +2,13 @@
 <rss version="2.0">  <channel>
     <title>混沌的云</title>
     <link>http://blog.zerob13.in</link>
-    <pubDate>11 Jul 14 15:12 CST</pubDate>
+    <pubDate>25 Jul 14 22:27 CST</pubDate>
+    <item>
+      <title>解决 MacVim 在 Yosemite 以及 Zsh 下 git pull 失败问题</title>
+      <link>http://blog.zerob13.in/随记/%E8%A7%A3%E5%86%B3-MacVim-%E5%9C%A8-Yosemite-%E4%BB%A5%E5%8F%8A-Zsh-%E4%B8%8B-git-pull-%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/</link>
+      <pubDate>2014-07-25 12:00:00 +0800</pubDate>
+      <description>&lt;h1&gt;&lt;a style=&#34;display: block;&#34; name=&#34;问题描述&#34; href=&#34;#问题描述&#34;&gt;&lt;/a&gt;问题描述&lt;/h1&gt;&#xA;&#xA;&lt;p&gt;在 MacVim 中使用 :BundleUpdate  让 Vundle 去更新我的插件，发现如下提示：&lt;/p&gt;&#xA;&#xA;&lt;pre&gt;&lt;code&gt;git pull: git-sh-setup: No such file or directory&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&#xA;&lt;h1&gt;&lt;a style=&#34;display: block;&#34; name=&#34;问题分析&#34; href=&#34;#问题分析&#34;&gt;&lt;/a&gt;问题分析&lt;/h1&gt;&#xA;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;直接在 Shell 中打开 vim 去更新却是没问题的。猜测是 macvim 的环境和 shell 不一样。&lt;/li&gt;&#xA;&lt;li&gt;检查 $PATH 变量，发现两边相同&lt;/li&gt;&#xA;&#xA;&lt;li&gt;&lt;p&gt;查看 git 目录下的 libexec/git-core/git-pull 脚本，发现是如下的一个调用：&lt;/p&gt;&#xA;&#xA;&lt;pre&gt;&lt;code&gt; . git-sh-setup &#xA;&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;&#xA;&#xA;&lt;li&gt;&lt;p&gt;查阅 StackOverFlow 得到如下资料：&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;a href=&#34;http://stackoverflow.com/questions/24022582/osx-10-10-yosemite-beta-on-git-pull-git-sh-setup-no-such-file-or-directory&#34;&gt;OSX 10.10 yosemite beta on git pull: git-sh-setup: No such file or directory&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&#xA;&#xA;&lt;li&gt;&lt;p&gt;根据资料是之前 iTerm2 也有这个 Bug ，仔细看了下我的 iTerm2 版本我的版本没有这个 Bug。于是跑去 GitHub 中找找这个问题的根源，发现 HomeBrew 的页面中有如下信息：&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;a href=&#34;https://github.com/Homebrew/homebrew/issues/29843&#34;&gt;(10.10) not recognizing /usr/local/bin before /usr/bin&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&#xA;&#xA;&lt;li&gt;&lt;p&gt;通篇看下来，基本上是 10.10 的兼容性问题，导致各种这个那个的问题，然后大概了解了，只要把初始化变成最简单的 shell 命令应该就可以解决，于是前往 MacVim 看改变 MacVim Shell环境的教程：&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;a href=&#34;https://code.google.com/p/macvim/wiki/UserDefaults&#34;&gt;UserDefaults&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&#xA;&lt;h1&gt;&lt;a style=&#34;display: block;&#34; name=&#34;解决方法&#34; href=&#34;#解决方法&#34;&gt;&lt;/a&gt;解决方法&lt;/h1&gt;&#xA;&#xA;&lt;p&gt;打开 Shell&lt;/p&gt;&#xA;&#xA;&lt;pre&gt;&lt;code&gt;$ defaults write org.vim.MacVim MMLoginShellCommand &amp;quot;/bin/zsh&amp;quot;&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&#xA;&lt;p&gt;完事&lt;/p&gt;&#xA;</description>
+    </item>
     <item>
       <title>起名字真麻烦，反正没什么人看这个博客，那就写个超长的名字好了，无所谓啦啦</title>
       <link>http://blog.zerob13.in/fucking-long-name-to-fuck-you</link>

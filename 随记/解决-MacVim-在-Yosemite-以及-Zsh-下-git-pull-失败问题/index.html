@@ -71,44 +71,70 @@
      <div id="post-index" class="container">
         <article class="post-container post">
     <header class="post-header">
-    <h1 class="post-title">梦，blog和生活碎片</h1>
+    <h1 class="post-title">解决 MacVim 在 Yosemite 以及 Zsh 下 git pull 失败问题</h1>
     <p class="post-date">
-        <time >2010-03-07</time>
+        <time >2014-07-25</time>
     </p>
     </header>
     <div class="post-content clearfix">
-    <p>好久没写点东西了。。。于是就开始敲这篇文字。算是流水账形式的记录吧。
-<h2><span style="color: #339966;">做梦</span></h2>
-<p style="padding-left: 30px;">这两天，我和Carl都做了比较搞的梦。现说Carl的吧，那小子说，有一天他做了个梦，梦见我和他一起去砍人（汗。。。）。据说是为了帮他报仇，至于什么仇嘛梦中没有交待，然后最无奈的是我在他的梦中居然骁勇善战，猛烈无比（巨汗。。。）我就这样被他想象成了很凶悍的人。。。杯具啊。
-然后说说我的，貌似我的梦也不是第一次做了。就是那个，又回到高考前，内容很空洞的梦，但是那种心跳速度，那种惊恐无助的感觉，很猛烈，当时我脸上应该是很恐惧的表情吧，之后就是早上醒来。貌似我每次做这个梦都是大雨的夜晚。今天天空一直是黑的，积水很深。F&hellip;</p></p>
+    <h1><a style="display: block;" name="问题描述" href="#问题描述"></a>问题描述</h1>
 
-<p><h2><span style="color: #339966;">Blog</span></h2>
-<p style="padding-left: 30px;">刚刚把blog改版了，换了个新主题。其实还不是很满意，我一直希望有一个那种很随意的风格的主题。最好是涂鸦的那种。可惜没找到，无奈。有个长远的计划，等今年blog空间和域名到期了，去米国买个新空间然后把摄影和平时的blog分离出来。恩，想法不错。</p></p>
+<p>在 MacVim 中使用 :BundleUpdate  让 Vundle 去更新我的插件，发现如下提示：</p>
 
-<p><h2><span style="color: #339966;">生活</span></h2>
-<p style="padding-left: 30px;">生活还算正常，一切都挺好的。听说Carl那里可能要发生9级的地震。。。希望不要出什么乱子。还有就是Ray的新blog搞定了大家可以去围观：</p></p>
+<pre><code>git pull: git-sh-setup: No such file or directory
+</code></pre>
 
-<p><h3><a href="http://www.zypatroon.com/">猛击这里围观Ray</a></h3>
-<p style="padding-left: 30px;">最近开始进入widget的开发，绕了一圈居然还是要面对html+css+js，哈哈，真是神奇的生活。</p></p>
+<h1><a style="display: block;" name="问题分析" href="#问题分析"></a>问题分析</h1>
+
+<ul>
+<li>直接在 Shell 中打开 vim 去更新却是没问题的。猜测是 macvim 的环境和 shell 不一样。</li>
+<li>检查 $PATH 变量，发现两边相同</li>
+
+<li><p>查看 git 目录下的 libexec/git-core/git-pull 脚本，发现是如下的一个调用：</p>
+
+<pre><code> . git-sh-setup 
+</code></pre></li>
+
+<li><p>查阅 StackOverFlow 得到如下资料：</p>
+
+<p><a href="http://stackoverflow.com/questions/24022582/osx-10-10-yosemite-beta-on-git-pull-git-sh-setup-no-such-file-or-directory">OSX 10.10 yosemite beta on git pull: git-sh-setup: No such file or directory</a></p></li>
+
+<li><p>根据资料是之前 iTerm2 也有这个 Bug ，仔细看了下我的 iTerm2 版本我的版本没有这个 Bug。于是跑去 GitHub 中找找这个问题的根源，发现 HomeBrew 的页面中有如下信息：</p>
+
+<p><a href="https://github.com/Homebrew/homebrew/issues/29843">(10.10) not recognizing /usr/local/bin before /usr/bin</a></p></li>
+
+<li><p>通篇看下来，基本上是 10.10 的兼容性问题，导致各种这个那个的问题，然后大概了解了，只要把初始化变成最简单的 shell 命令应该就可以解决，于是前往 MacVim 看改变 MacVim Shell环境的教程：</p>
+
+<p><a href="https://code.google.com/p/macvim/wiki/UserDefaults">UserDefaults</a></p></li>
+</ul>
+
+<h1><a style="display: block;" name="解决方法" href="#解决方法"></a>解决方法</h1>
+
+<p>打开 Shell</p>
+
+<pre><code>$ defaults write org.vim.MacVim MMLoginShellCommand &quot;/bin/zsh&quot;
+</code></pre>
+
+<p>完事</p>
 
 
     </div>
     <footer class="post-footer clearfix">
             <!-- <p class="post-tags"><span>Tagged:</span> </p> -->
             <div class="share">
-                   <a class="icon-twitter" href="http://twitter.com/share?text=梦，blog和生活碎片&url=http://blog.zerob13.in/e6a2a6efbc8cbloge5928ce7949fe6b4bbe7a28ee78987"
+                   <a class="icon-twitter" href="http://twitter.com/share?text=解决 MacVim 在 Yosemite 以及 Zsh 下 git pull 失败问题&url=http://blog.zerob13.in/随记/%E8%A7%A3%E5%86%B3-MacVim-%E5%9C%A8-Yosemite-%E4%BB%A5%E5%8F%8A-Zsh-%E4%B8%8B-git-pull-%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/"
                 onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                 <i class="fa fa-twitter"></i>
                 <span class="hidden">Twitter</span>
             </a>
 
-            <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.zerob13.in/e6a2a6efbc8cbloge5928ce7949fe6b4bbe7a28ee78987"
+            <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.zerob13.in/随记/%E8%A7%A3%E5%86%B3-MacVim-%E5%9C%A8-Yosemite-%E4%BB%A5%E5%8F%8A-Zsh-%E4%B8%8B-git-pull-%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/"
                 onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                 <i class="fa fa-facebook"></i>
                 <span class="hidden">Facebook</span>
             </a>
 
-            <a class="icon-google-plus" href="https://plus.google.com/share?url=http://blog.zerob13.in/e6a2a6efbc8cbloge5928ce7949fe6b4bbe7a28ee78987"
+            <a class="icon-google-plus" href="https://plus.google.com/share?url=http://blog.zerob13.in/随记/%E8%A7%A3%E5%86%B3-MacVim-%E5%9C%A8-Yosemite-%E4%BB%A5%E5%8F%8A-Zsh-%E4%B8%8B-git-pull-%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/"
                onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                <i class="fa fa-google-plus"></i>
                 <span class="hidden">Google+</span>
@@ -132,12 +158,12 @@
 
 <!-- <div class="pagination"> -->
 <!--            -->
-<!--             <a href="/stay-ronan-keating" title="Stay-Ronan Keating"></a> -->
 <!--            -->
+<!--             <1!-- <a>&larr; Previous</a></li> --1> -->
 <!--            -->
 
 <!--            -->
-<!--             <a href="/bloge5a29ee58aa0e79bb8e5868ce5928ce79599e8a880e69dbfe58a9fe883bd" title="Blog增加相册和留言板功能">Next &rarr;</a> -->
+<!--             <a href="/fucking-long-name-to-fuck-you" title="起名字真麻烦，反正没什么人看这个博客，那就写个超长的名字好了，无所谓啦啦">Next &rarr;</a> -->
 <!--            -->
 <!--            -->
 <!--     </div> -->

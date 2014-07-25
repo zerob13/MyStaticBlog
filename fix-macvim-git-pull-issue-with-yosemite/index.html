@@ -69,121 +69,107 @@
       </header>
  <div id="ajax-container">
      <div id="post-index" class="container">
-        <!-- <div class="container"> -->
-        <article class="post-container ">
-            <header class="post-header">
-                <h1 class="post-title">Pages</h1>
+        <article class="post-container post">
+    <header class="post-header">
+    <h1 class="post-title">解决 MacVim 在 Yosemite 以及 Zsh 下 git pull 失败问题</h1>
+    <p class="post-date">
+        <time >2014-07-25</time>
+    </p>
+    </header>
+    <div class="post-content clearfix">
+    <h1><a style="display: block;" name="问题描述" href="#问题描述"></a>问题描述</h1>
 
-                <!-- <p class="blog-description"></p> -->
-            </header>
+<p>在 MacVim 中使用 :BundleUpdate  让 Vundle 去更新我的插件，发现如下提示：</p>
 
-            <div class="post-content">
-                
+<pre><code>git pull: git-sh-setup: No such file or directory
+</code></pre>
+
+<h1><a style="display: block;" name="问题分析" href="#问题分析"></a>问题分析</h1>
+
 <ul>
+<li>直接在 Shell 中打开 vim 去更新却是没问题的。猜测是 macvim 的环境和 shell 不一样。</li>
+<li>检查 $PATH 变量，发现两边相同</li>
 
-  
+<li><p>查看 git 目录下的 libexec/git-core/git-pull 脚本，发现是如下的一个调用：</p>
 
+<pre><code> . git-sh-setup 
+</code></pre></li>
 
-  <li><a href="/about">About</a></li>
+<li><p>查阅 StackOverFlow 得到如下资料：</p>
 
+<p><a href="http://stackoverflow.com/questions/24022582/osx-10-10-yosemite-beta-on-git-pull-git-sh-setup-no-such-file-or-directory">OSX 10.10 yosemite beta on git pull: git-sh-setup: No such file or directory</a></p></li>
 
+<li><p>根据资料是之前 iTerm2 也有这个 Bug ，仔细看了下我的 iTerm2 版本我的版本没有这个 Bug。于是跑去 GitHub 中找找这个问题的根源，发现 HomeBrew 的页面中有如下信息：</p>
 
-  
+<p><a href="https://github.com/Homebrew/homebrew/issues/29843">(10.10) not recognizing /usr/local/bin before /usr/bin</a></p></li>
 
+<li><p>通篇看下来，基本上是 10.10 的兼容性问题，导致各种这个那个的问题，然后大概了解了，只要把初始化变成最简单的 shell 命令应该就可以解决，于是前往 MacVim 看改变 MacVim Shell环境的教程：</p>
 
-  <li><a href="/archive">Archive</a></li>
-
-
-
-  
-
-
-  <li><a href="/categories">Categories</a></li>
-
-
-
-  
-
-
-  <li><a href="/">Pages</a></li>
-
-
-
-  
-  <li class="active"><a href="/pages" class="active">Pages</a></li>
-
-
-
-
-
-  
-
-
-  <li><a href="/tags">Tags</a></li>
-
-
-
+<p><a href="https://code.google.com/p/macvim/wiki/UserDefaults">UserDefaults</a></p></li>
 </ul>
 
+<h1><a style="display: block;" name="解决方法" href="#解决方法"></a>解决方法</h1>
 
+<p>打开 Shell</p>
+
+<pre><code>$ defaults write org.vim.MacVim MMLoginShellCommand &quot;/bin/zsh&quot;
+</code></pre>
+
+<p>完事</p>
+
+
+    </div>
+    <footer class="post-footer clearfix">
+            <!-- <p class="post-tags"><span>Tagged:</span> </p> -->
+            <div class="share">
+                   <a class="icon-twitter" href="http://twitter.com/share?text=解决 MacVim 在 Yosemite 以及 Zsh 下 git pull 失败问题&url=http://blog.zerob13.in/fix-macvim-git-pull-issue-with-yosemite"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+
+            <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.zerob13.in/fix-macvim-git-pull-issue-with-yosemite"
+                onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                <i class="fa fa-facebook"></i>
+                <span class="hidden">Facebook</span>
+            </a>
+
+            <a class="icon-google-plus" href="https://plus.google.com/share?url=http://blog.zerob13.in/fix-macvim-git-pull-issue-with-yosemite"
+               onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+               <i class="fa fa-google-plus"></i>
+                <span class="hidden">Google+</span>
+            </a>
             </div>
-        </article>
-<!-- </div> -->
-<!-- <div class="page-header"> -->
-<!--   <h1>Pages </h1> -->
-<!-- </div> -->
+        </footer>
+    
+<div id="disqus_thread"></div>
+<script>
+    var disqus_developer = 1;
+    var disqus_shortname = 'zerob13'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
 
-<!-- <div class="row"> -->
-<!--   <div class="span12"> -->
-<!--     
-<ul>
+<!-- <div class="pagination"> -->
+<!--            -->
+<!--            -->
+<!--             <1!-- <a>&larr; Previous</a></li> --1> -->
+<!--            -->
 
-  
+<!--            -->
+<!--             <a href="/fucking-long-name-to-fuck-you" title="起名字真麻烦，反正没什么人看这个博客，那就写个超长的名字好了，无所谓啦啦">Next &rarr;</a> -->
+<!--            -->
+<!--            -->
+<!--     </div> -->
 
+</article>
 
-  <li><a href="/about">About</a></li>
-
-
-
-  
-
-
-  <li><a href="/archive">Archive</a></li>
-
-
-
-  
-
-
-  <li><a href="/categories">Categories</a></li>
-
-
-
-  
-
-
-  <li><a href="/">Pages</a></li>
-
-
-
-  
-  <li class="active"><a href="/pages" class="active">Pages</a></li>
-
-
-
-
-
-  
-
-
-  <li><a href="/tags">Tags</a></li>
-
-
-
-</ul>
- -->
-<!--   </div> -->
-<!-- </div> -->
 
      </div>
     </div>
